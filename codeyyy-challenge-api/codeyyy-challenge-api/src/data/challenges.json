@@ -1,0 +1,329 @@
+[
+  {
+    "id": "CYY-E01",
+    "number": 1,
+    "title": "The Missing Treasure",
+    "difficulty": "Easy",
+    "timeMinutes": 10,
+    "concept": "Array / math",
+    "hasStory": true,
+    "story": "A treasure chest contains numbered coins from 0 to N. Unfortunately, one coin is missing. Your mission is to identify the missing number to unlock the treasure chest.",
+    "statement": [
+      "You are given an array containing N distinct integers from the range 0 to N, with exactly one number missing.",
+      "Find and print the missing number."
+    ],
+    "inputFormat": [
+      "First line contains integer N.",
+      "Second line contains N distinct space-separated integers."
+    ],
+    "outputFormat": [
+      "Print the missing number."
+    ],
+    "constraints": [
+      "1 ≤ N ≤ 100000",
+      "0 ≤ A[i] ≤ N",
+      "All elements are distinct."
+    ],
+    "samples": [
+      {
+        "input": "5\n3 0 1 4 5",
+        "output": "2"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-E02",
+    "number": 2,
+    "title": "Maximum Consecutive Ones",
+    "difficulty": "Easy",
+    "timeMinutes": 10,
+    "concept": "Array traversal",
+    "hasStory": false,
+    "story": null,
+    "statement": [
+      "You are given a binary array containing only 0s and 1s.",
+      "Find the maximum number of consecutive 1s in the array."
+    ],
+    "inputFormat": [
+      "First line contains integer N.",
+      "Second line contains N space-separated integers (0 or 1)."
+    ],
+    "outputFormat": [
+      "Print the maximum number of consecutive 1s."
+    ],
+    "constraints": [
+      "1 ≤ N ≤ 100000",
+      "Each A[i] is 0 or 1."
+    ],
+    "samples": [
+      {
+        "input": "8\n1 1 0 1 1 1 0 1",
+        "output": "3"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-E03",
+    "number": 3,
+    "title": "Check Whether Two Strings Are Anagrams",
+    "difficulty": "Easy",
+    "timeMinutes": 10,
+    "concept": "String frequency",
+    "hasStory": false,
+    "story": null,
+    "statement": [
+      "You are given two strings S1 and S2. Two strings are anagrams if one can be rearranged to form the other, using every character exactly once.",
+      "Print YES if S1 and S2 are anagrams of each other; otherwise, print NO."
+    ],
+    "inputFormat": [
+      "First line contains string S1.",
+      "Second line contains string S2."
+    ],
+    "outputFormat": [
+      "Print YES or NO."
+    ],
+    "constraints": [
+      "1 ≤ |S1|, |S2| ≤ 100000",
+      "Both strings contain only lowercase English letters (a–z)."
+    ],
+    "samples": [
+      {
+        "input": "listen\nsilent",
+        "output": "YES"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-M04",
+    "number": 4,
+    "title": "Longest Substring Without Repeating Characters",
+    "difficulty": "Medium",
+    "timeMinutes": 15,
+    "concept": "Sliding window",
+    "hasStory": false,
+    "story": null,
+    "statement": [
+      "You are given a string S. Find the length of the longest substring that contains no repeated characters.",
+      "A substring is a run of consecutive characters from S."
+    ],
+    "inputFormat": [
+      "A single line containing string S (it may contain spaces)."
+    ],
+    "outputFormat": [
+      "Print the maximum length."
+    ],
+    "constraints": [
+      "1 ≤ |S| ≤ 100000",
+      "S contains printable ASCII characters, including spaces."
+    ],
+    "samples": [
+      {
+        "input": "abcabcbb",
+        "output": "3"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-M05",
+    "number": 5,
+    "title": "Collect the Energy Crystals",
+    "difficulty": "Medium",
+    "timeMinutes": 15,
+    "concept": "Prefix and suffix products",
+    "hasStory": true,
+    "story": "You enter a mysterious energy chamber containing several crystals. Each crystal has a numerical energy value. To activate the chamber, you must calculate the product of all crystal values except the crystal at your current position.",
+    "statement": [
+      "You are given an integer array of size N.",
+      "For every position i, calculate the product of all array elements except the element at position i.",
+      "You must solve the problem without using division."
+    ],
+    "inputFormat": [
+      "First line contains integer N.",
+      "Second line contains N space-separated integers."
+    ],
+    "outputFormat": [
+      "Print N space-separated integers representing the resulting array."
+    ],
+    "constraints": [
+      "2 ≤ N ≤ 100000",
+      "−30 ≤ A[i] ≤ 30",
+      "Final products fit within a signed 64-bit integer."
+    ],
+    "samples": [
+      {
+        "input": "4\n1 2 3 4",
+        "output": "24 12 8 6"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-M06",
+    "number": 6,
+    "title": "Merge Overlapping Intervals",
+    "difficulty": "Medium",
+    "timeMinutes": 15,
+    "concept": "Sorting",
+    "hasStory": false,
+    "story": null,
+    "statement": [
+      "You are given N intervals, where the i-th interval is [start, end]. Merge all overlapping intervals and print the resulting non-overlapping intervals in increasing order of start.",
+      "Two intervals overlap if they share at least one point, so [1, 4] and [4, 5] merge into [1, 5]."
+    ],
+    "inputFormat": [
+      "First line contains integer N.",
+      "Next N lines each contain two integers: start and end. The intervals may be given in any order."
+    ],
+    "outputFormat": [
+      "Print the merged intervals, one per line, as: start end"
+    ],
+    "constraints": [
+      "1 ≤ N ≤ 100000",
+      "0 ≤ start ≤ end ≤ 10^9"
+    ],
+    "samples": [
+      {
+        "input": "4\n1 3\n2 6\n8 10\n15 18",
+        "output": "1 6\n8 10\n15 18"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-M07",
+    "number": 7,
+    "title": "Count the Number of Islands",
+    "difficulty": "Medium",
+    "timeMinutes": 15,
+    "concept": "BFS / DFS",
+    "hasStory": false,
+    "story": null,
+    "statement": [
+      "You are given a grid of R rows and C columns containing only 0s (water) and 1s (land).",
+      "An island is a group of 1s connected horizontally or vertically (not diagonally). Count the number of islands in the grid."
+    ],
+    "inputFormat": [
+      "First line contains integers R and C.",
+      "Next R lines contain C space-separated values (0 or 1)."
+    ],
+    "outputFormat": [
+      "Print the number of islands."
+    ],
+    "constraints": [
+      "1 ≤ R, C ≤ 300",
+      "Each cell is 0 or 1."
+    ],
+    "samples": [
+      {
+        "input": "4 5\n1 1 0 0 0\n1 1 0 0 1\n0 0 1 0 0\n0 0 0 1 1",
+        "output": "4"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-H08",
+    "number": 8,
+    "title": "Escape the Weighted Grid Arena",
+    "difficulty": "Hard",
+    "timeMinutes": 20,
+    "concept": "Shortest path (Dijkstra)",
+    "hasStory": true,
+    "story": "You are trapped inside a futuristic battle arena. Every cell has a different energy cost. You must reach the exit using the path with the lowest total energy cost. You can move up, down, left, or right. Every cell you enter adds its energy cost to your total.",
+    "statement": [
+      "You are given a grid of R rows and C columns containing non-negative integers.",
+      "You are also given the starting and target coordinates.",
+      "Find the minimum total cost required to travel from the starting cell to the target cell.",
+      "The total cost includes both the starting cell and all subsequently visited cells."
+    ],
+    "inputFormat": [
+      "First line contains integers R and C.",
+      "Next R lines contain C non-negative integers.",
+      "Last line contains four integers: Sr, Sc, Tr, Tc, representing the starting and target coordinates (0-indexed)."
+    ],
+    "outputFormat": [
+      "Print the minimum possible path cost."
+    ],
+    "constraints": [
+      "1 ≤ R, C ≤ 200",
+      "0 ≤ A[i][j] ≤ 10000",
+      "A valid path is guaranteed to exist."
+    ],
+    "samples": [
+      {
+        "input": "3 3\n1 3 1\n1 5 1\n1 1 1\n0 0 2 2",
+        "output": "5"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-H09",
+    "number": 9,
+    "title": "Longest Increasing Subsequence",
+    "difficulty": "Hard",
+    "timeMinutes": 20,
+    "concept": "Dynamic programming",
+    "hasStory": false,
+    "story": null,
+    "statement": [
+      "You are given an array of N integers. Find the length of the longest strictly increasing subsequence.",
+      "A subsequence keeps the original order of the elements but does not need to be contiguous."
+    ],
+    "inputFormat": [
+      "First line contains integer N.",
+      "Second line contains N space-separated integers."
+    ],
+    "outputFormat": [
+      "Print the length of the longest strictly increasing subsequence."
+    ],
+    "constraints": [
+      "1 ≤ N ≤ 2500",
+      "−10^9 ≤ A[i] ≤ 10^9"
+    ],
+    "samples": [
+      {
+        "input": "8\n10 9 2 5 3 7 101 18",
+        "output": "4"
+      }
+    ],
+    "hiddenTests": []
+  },
+  {
+    "id": "CYY-H10",
+    "number": 10,
+    "title": "Minimum Coins to Reach the Target",
+    "difficulty": "Hard",
+    "timeMinutes": 20,
+    "concept": "Dynamic programming",
+    "hasStory": false,
+    "story": null,
+    "statement": [
+      "You are given N coin denominations and a target amount A. Each denomination can be used any number of times.",
+      "Find the minimum number of coins needed to make exactly A. If it is impossible, print -1."
+    ],
+    "inputFormat": [
+      "First line contains integers N and A.",
+      "Second line contains N space-separated positive integers (the denominations)."
+    ],
+    "outputFormat": [
+      "Print the minimum number of coins, or -1."
+    ],
+    "constraints": [
+      "1 ≤ N ≤ 100",
+      "0 ≤ A ≤ 10000",
+      "1 ≤ coin[i] ≤ 10000, all denominations are distinct."
+    ],
+    "samples": [
+      {
+        "input": "3 11\n1 5 6",
+        "output": "2"
+      }
+    ],
+    "hiddenTests": []
+  }
+]
