@@ -45,17 +45,8 @@ function LoginPage() {
   };
 
   return (
-    <div className="auth-page">
-
-      <Link to="/" className="auth-logo-link">
-        <img
-          src="/assets/codeyyy-logo.jpg"
-          alt="CODEYYY Logo"
-          className="auth-logo"
-        />
-      </Link>
-
-      <main className="auth-card">
+    <AuthLayout>
+      <section className="auth-card">
 
         <p className="auth-tagline">
           WELCOME BACK, CHALLENGER
@@ -67,13 +58,17 @@ function LoginPage() {
           Log in and continue your coding battles.
         </p>
 
-        <form onSubmit={handleLogin}>
+        <form className="auth-form" onSubmit={handleSubmit}>
 
           <div className="auth-form-group">
-            <label htmlFor="login-email">EMAIL ADDRESS</label>
+            <label htmlFor="login-email">
+              EMAIL ADDRESS
+            </label>
+
             <input
-              id="login-email"
               type="email"
+              id="login-email"
+              name="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -82,15 +77,19 @@ function LoginPage() {
           </div>
 
           <div className="auth-form-group">
-            <label htmlFor="login-password">PASSWORD</label>
+            <label htmlFor="login-password">
+              PASSWORD
+            </label>
 
             <div className="auth-password">
               <input
-                id="login-password"
                 type={showPassword ? "text" : "password"}
+                id="login-password"
+                name="password"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 required
               />
 
@@ -116,6 +115,7 @@ function LoginPage() {
             <Link to="/forgot-password">
               Forgot password?
             </Link>
+
           </div>
 
           {error && (
@@ -135,16 +135,18 @@ function LoginPage() {
         </form>
 
         <p className="auth-switch">
-          Don't have an account?
-          <Link to="/register"> Create account</Link>
+          Don't have an account?{" "}
+          <Link to="/register">
+            Create account
+          </Link>
         </p>
 
         <Link to="/" className="auth-back">
           ← Back to homepage
         </Link>
 
-      </main>
-    </div>
+      </section>
+    </AuthLayout>
   );
 }
 

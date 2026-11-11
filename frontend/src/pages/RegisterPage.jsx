@@ -59,36 +59,28 @@ function RegisterPage() {
   };
 
   return (
-    <div className="auth-page">
-
-      <Link to="/" className="auth-logo-link">
-        <img
-          src="/assets/codeyyy-logo.jpg"
-          alt="CODEYYY Logo"
-          className="auth-logo"
-        />
-      </Link>
-
-      <main className="auth-card">
+    <AuthLayout>
+      <section className="auth-card auth-card-register">
 
         <p className="auth-tagline">
-          JOIN THE BATTLE
+          YOUR BATTLE STARTS HERE
         </p>
 
         <h1>CLAIM YOUR SPOT.</h1>
 
         <p className="auth-description">
-          Create your CODEYYY account.
+          Create your CODYEYY account.
         </p>
 
-        <form onSubmit={handleRegister}>
+        <form className="auth-form" onSubmit={handleSubmit}>
 
           <div className="auth-form-group">
             <label htmlFor="register-username">USERNAME</label>
 
             <input
-              id="register-username"
               type="text"
+              id="register-username"
+              name="username"
               placeholder="Choose a username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -102,8 +94,9 @@ function RegisterPage() {
             <label htmlFor="register-email">EMAIL ADDRESS</label>
 
             <input
-              id="register-email"
               type="email"
+              id="register-email"
+              name="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -112,12 +105,15 @@ function RegisterPage() {
           </div>
 
           <div className="auth-form-group">
-            <label htmlFor="register-password">PASSWORD</label>
+            <label htmlFor="register-password">
+              PASSWORD
+            </label>
 
             <div className="auth-password">
               <input
-                id="register-password"
                 type={showPassword ? "text" : "password"}
+                id="register-password"
+                name="password"
                 placeholder="Create a password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -160,16 +156,18 @@ function RegisterPage() {
         </form>
 
         <p className="auth-switch">
-          Already registered?
-          <Link to="/login"> Log in</Link>
+          Already registered?{" "}
+          <Link to="/login">
+            Log in
+          </Link>
         </p>
 
         <Link to="/" className="auth-back">
           ← Back to homepage
         </Link>
 
-      </main>
-    </div>
+      </section>
+    </AuthLayout>
   );
 }
 
