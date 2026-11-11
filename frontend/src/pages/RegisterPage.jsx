@@ -1,18 +1,17 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import api from "../services/api";
-import "../styles/auth.css";
+import AuthLayout from "../components/AuthLayout";
 
 function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
 
-  // Form data
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Request states
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -32,34 +31,37 @@ function RegisterPage() {
       });
 
       if (response.data.success) {
-        setSuccess(response.data.message);
+        setSuccess(
+          response.data.message || "Account created successfully!"
+        );
 
-        // Clear form after successful registration
         setUsername("");
         setEmail("");
         setPassword("");
 
         console.log("Registered user:", response.data.user);
+      } else {
+        setError(
+          response.data.message || "Registration failed."
+        );
       }
 
     } catch (err) {
-  console.error("Registration error:", err);
-  console.log("Error response:", err.response);
-  console.log("Error status:", err.response?.status);
-  console.log("Error data:", err.response?.data);
+      console.error("Registration error:", err);
 
-  setError(
-    err.response?.data?.message ||
-    err.message ||
-    "Registration failed. Please try again."
-  );
-} finally {
+      setError(
+        err.response?.data?.message ||
+        "Registration failed. Please try again."
+      );
+
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <AuthLayout>
+
       <section className="auth-card auth-card-register">
 
         <p className="auth-tagline">
@@ -72,10 +74,13 @@ function RegisterPage() {
           Create your CODYEYY account.
         </p>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleRegister}>
 
           <div className="auth-form-group">
-            <label htmlFor="register-username">USERNAME</label>
+
+            <label htmlFor="register-username">
+              USERNAME
+            </label>
 
             <input
               type="text"
@@ -86,12 +91,17 @@ function RegisterPage() {
               onChange={(e) => setUsername(e.target.value)}
               minLength={3}
               maxLength={20}
+              autoComplete="username"
               required
             />
+
           </div>
 
           <div className="auth-form-group">
-            <label htmlFor="register-email">EMAIL ADDRESS</label>
+
+            <label htmlFor="register-email">
+              EMAIL ADDRESS
+            </label>
 
             <input
               type="email"
@@ -100,16 +110,20 @@ function RegisterPage() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
+
           </div>
 
           <div className="auth-form-group">
+
             <label htmlFor="register-password">
               PASSWORD
             </label>
 
             <div className="auth-password">
+
               <input
                 type={showPassword ? "text" : "password"}
                 id="register-password"
@@ -119,6 +133,7 @@ function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 minLength={8}
                 maxLength={72}
+                autoComplete="new-password"
                 required
               />
 
@@ -128,19 +143,19 @@ function RegisterPage() {
               >
                 {showPassword ? "HIDE" : "SHOW"}
               </button>
+
             </div>
+
           </div>
 
-          {/* Error message */}
           {error && (
-            <p role="alert" style={{ color: "#ff5555" }}>
+            <p role="alert" className="auth-error">
               {error}
             </p>
           )}
 
-          {/* Success message */}
           {success && (
-            <p role="status" style={{ color: "#22c55e" }}>
+            <p role="status" className="auth-success">
               {success}
             </p>
           )}
@@ -167,6 +182,7 @@ function RegisterPage() {
         </Link>
 
       </section>
+
     </AuthLayout>
   );
 }

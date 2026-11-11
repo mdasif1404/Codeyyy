@@ -1,8 +1,9 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import api from "../services/api";
-import "../styles/auth.css";
+import AuthLayout from "../components/AuthLayout";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,22 +24,27 @@ function LoginPage() {
     try {
       const response = await api.post("/auth/login", {
         email: email.trim().toLowerCase(),
-        password
+        password,
+        rememberMe
       });
 
       if (response.data.success) {
         console.log("Logged-in user:", response.data.user);
-
-        // Authentication cookie is managed by the browser.
         navigate("/dashboard");
+      } else {
+        setError(
+          response.data.message || "Login failed. Please try again."
+        );
       }
+
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        "Login failed. Please check your credentials and try again."
+        "Login failed. Please check your credentials."
       );
 
       console.error("Login error:", err);
+
     } finally {
       setLoading(false);
     }
@@ -46,6 +52,7 @@ function LoginPage() {
 
   return (
     <AuthLayout>
+
       <section className="auth-card">
 
         <p className="auth-tagline">
@@ -58,7 +65,7 @@ function LoginPage() {
           Log in and continue your coding battles.
         </p>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleLogin}>
 
           <div className="auth-form-group">
             <label htmlFor="login-email">
@@ -72,16 +79,19 @@ function LoginPage() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
           </div>
 
           <div className="auth-form-group">
+
             <label htmlFor="login-password">
               PASSWORD
             </label>
 
             <div className="auth-password">
+
               <input
                 type={showPassword ? "text" : "password"}
                 id="login-password"
@@ -99,10 +109,12 @@ function LoginPage() {
               >
                 {showPassword ? "HIDE" : "SHOW"}
               </button>
+
             </div>
           </div>
 
           <div className="auth-options">
+
             <label className="remember-label">
               <input
                 type="checkbox"
@@ -146,6 +158,7 @@ function LoginPage() {
         </Link>
 
       </section>
+
     </AuthLayout>
   );
 }

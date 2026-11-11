@@ -1,0 +1,51 @@
+
+.dashboard-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #090707;
+}
+
+.dashboard-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.dashboard-video-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(8, 5, 5, 0.65),
+      rgba(8, 5, 5, 0.76)
+    ),
+    radial-gradient(
+      circle at center,
+      transparent,
+      rgba(0, 0, 0, 0.45)
+    );
+
+  pointer-events: none;
+}
+
+.dashboard-content {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-video {
+    display: none;
+  }
+}
