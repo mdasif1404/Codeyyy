@@ -1,3 +1,6 @@
+
+/* Global layout reset */
+
 * {
   margin: 0;
   padding: 0;
@@ -5,17 +8,18 @@
 }
 
 html,
-body,
-#root {
+body {
   width: 100%;
   min-height: 100%;
 }
 
 body {
-  background: #100d0d;
-  font-family: 'DM Sans', sans-serif;
+  display: block;
+  min-width: 320px;
+  background: #0b0909;
 }
 
-a {
-  text-decoration: none;
+#root {
+  width: 100%;
+  min-height: 100vh;
 }

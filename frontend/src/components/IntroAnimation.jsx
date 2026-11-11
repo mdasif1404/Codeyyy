@@ -1,71 +1,76 @@
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../styles/intro-animation.css";
 
 function IntroAnimation() {
-  const [showIntro, setShowIntro] = useState(
-    () => sessionStorage.getItem("codeyyy-intro-played") !== "true"
-  );
+  const [showIntro, setShowIntro] = useState(() => {
+    return sessionStorage.getItem("codyyy_intro_played") !== "true";
+  });
 
-  const [isClosing, setIsClosing] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    if (showIntro) {
-      sessionStorage.setItem("codeyyy-intro-played", "true");
+    if (!showIntro) return;
+
+    document.body.style.overflow = "hidden";
+
+    const video = videoRef.current;
+
+    if (video) {
+      video.muted = true;
+
+      video.play().catch((error) => {
+        console.error("Intro autoplay failed:", error);
+      });
     }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [showIntro]);
 
-  const closeIntro = () => {
-    if (!isClosing) {
-      setIsClosing(true);
-    }
-  };
-
-  const handleAnimationEnd = () => {
-    if (isClosing) {
-      setShowIntro(false);
-    }
+  const finishIntro = () => {
+    sessionStorage.setItem("codyyy_intro_played", "true");
+    setShowIntro(false);
   };
 
   if (!showIntro) return null;
 
   return (
-    <div
-      className={`intro-overlay ${isClosing ? "intro-closing" : ""}`}
-      onAnimationEnd={handleAnimationEnd}
-    >
+    <div className="intro-overlay">
+
       {!videoError ? (
         <video
+          ref={videoRef}
           className="intro-video"
+          src="/videos/codeyyy_video.mp4"
           autoPlay
           muted
           playsInline
           preload="auto"
-          onEnded={closeIntro}
-          onError={() => setVideoError(true)}
-        >
-          <source
-            src="/videos/codeyyy_video.mp4"
-            type="video/mp4"
-          />
-        </video>
+          onEnded={finishIntro}
+          onError={() => {
+            console.error("Unable to load intro video.");
+            setVideoError(true);
+          }}
+        />
       ) : (
-        <div className="intro-error">
-          Video could not be loaded.
-          <button onClick={closeIntro}>Continue to Codyyy</button>
+        <div className="intro-fallback">
+          <h1>CODYEYY</h1>
+          <p>THE CODING BATTLE</p>
         </div>
       )}
 
-      {!isClosing && (
-        <button
-          className="skip-intro"
-          onClick={closeIntro}
-          type="button"
-        >
-          SKIP INTRO →
-        </button>
-      )}
+      <div className="intro-dark-overlay" />
+
+      <button
+        className="skip-intro-btn"
+        onClick={finishIntro}
+      >
+        SKIP INTRO →
+      </button>
+
     </div>
   );
 }
