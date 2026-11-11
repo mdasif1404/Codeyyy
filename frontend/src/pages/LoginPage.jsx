@@ -1,14 +1,47 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../services/api";
 import "../styles/auth.css";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Login submitted");
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await api.post("/auth/login", {
+        email: email.trim().toLowerCase(),
+        password
+      });
+
+      if (response.data.success) {
+        console.log("Logged-in user:", response.data.user);
+
+        // Authentication cookie is managed by the browser.
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+        "Login failed. Please check your credentials and try again."
+      );
+
+      console.error("Login error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,6 +75,8 @@ function LoginPage() {
               id="login-email"
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -54,6 +89,8 @@ function LoginPage() {
                 id="login-password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
 
@@ -68,7 +105,11 @@ function LoginPage() {
 
           <div className="auth-options">
             <label className="remember-label">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
               Remember me
             </label>
 
@@ -77,8 +118,18 @@ function LoginPage() {
             </Link>
           </div>
 
-          <button type="submit" className="auth-submit">
-            ENTER THE ARENA →
+          {error && (
+            <p role="alert" className="auth-error">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="auth-submit"
+            disabled={loading}
+          >
+            {loading ? "ENTERING..." : "ENTER THE ARENA →"}
           </button>
 
         </form>

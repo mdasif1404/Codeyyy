@@ -1,14 +1,16 @@
+import 'dotenv/config.js'
 import express from 'express';
-import dotenv from 'dotenv';
 import http from 'http';
 import { Server } from 'socket.io';
-import connectDB from './Config/db.js';
 import cookieParser from 'cookie-parser';
+
+import connectDB from './Config/db.js';
+import corsMiddleware from './Config/cors.js';
 import authRoutes from './routes/authRoutes.js'
 
 
 const app = express()
-dotenv.config()
+
 
 const server = http.createServer(app);
 
@@ -20,6 +22,7 @@ const io = new Server(server, {
     }
 });
 
+app.use(corsMiddleware)
 app.use(express.json())
 app.use(cookieParser())
 
