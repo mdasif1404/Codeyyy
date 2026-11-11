@@ -19,13 +19,14 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
 
+        {/* Public dashboard - no login required */}
+        <Route path="/dashboard" element={<Dashboard />} />
+
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/register" element={<RegisterPage />} />
 
         <Route path="/how-it-works" element={<HowItWorks />} />
-
-        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </>
   );
