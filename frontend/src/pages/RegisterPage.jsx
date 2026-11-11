@@ -1,70 +1,76 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/auth.css";
+import AuthLayout from "../components/AuthLayout";
 
 function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleRegister = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Connect your existing registration API logic here.
     console.log("Registration submitted");
   };
 
   return (
-    <div className="auth-page">
-
-      <Link to="/" className="auth-logo-link">
-        <img
-          src="/assets/codeyyy-logo.jpg"
-          alt="CODEYYY Logo"
-          className="auth-logo"
-        />
-      </Link>
-
-      <main className="auth-card">
+    <AuthLayout>
+      <section className="auth-card auth-card-register">
 
         <p className="auth-tagline">
-          JOIN THE BATTLE
+          YOUR BATTLE STARTS HERE
         </p>
 
         <h1>CLAIM YOUR SPOT.</h1>
 
         <p className="auth-description">
-          Create your CODEYYY account.
+          Create your CODYEYY account.
         </p>
 
-        <form onSubmit={handleRegister}>
+        <form className="auth-form" onSubmit={handleSubmit}>
 
           <div className="auth-form-group">
-            <label htmlFor="register-username">USERNAME</label>
+            <label htmlFor="register-username">
+              USERNAME
+            </label>
+
             <input
-              id="register-username"
               type="text"
+              id="register-username"
+              name="username"
               placeholder="Choose a username"
-              minLength={3}
+              autoComplete="username"
               required
             />
           </div>
 
           <div className="auth-form-group">
-            <label htmlFor="register-email">EMAIL ADDRESS</label>
+            <label htmlFor="register-email">
+              EMAIL ADDRESS
+            </label>
+
             <input
-              id="register-email"
               type="email"
+              id="register-email"
+              name="email"
               placeholder="Enter your email"
+              autoComplete="email"
               required
             />
           </div>
 
           <div className="auth-form-group">
-            <label htmlFor="register-password">PASSWORD</label>
+            <label htmlFor="register-password">
+              PASSWORD
+            </label>
 
             <div className="auth-password">
               <input
-                id="register-password"
                 type={showPassword ? "text" : "password"}
+                id="register-password"
+                name="password"
                 placeholder="Create a password"
+                autoComplete="new-password"
                 minLength={8}
                 required
               />
@@ -85,16 +91,18 @@ function RegisterPage() {
         </form>
 
         <p className="auth-switch">
-          Already registered?
-          <Link to="/login"> Log in</Link>
+          Already registered?{" "}
+          <Link to="/login">
+            Log in
+          </Link>
         </p>
 
         <Link to="/" className="auth-back">
           ← Back to homepage
         </Link>
 
-      </main>
-    </div>
+      </section>
+    </AuthLayout>
   );
 }
 
