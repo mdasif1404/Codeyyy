@@ -1,5 +1,3 @@
-
-import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/dashboard.css";
 
@@ -7,173 +5,121 @@ function Dashboard() {
   return (
     <div className="dashboard-page">
 
-      {/* BACKGROUND VIDEO */}
-      <video
-        className="dashboard-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
-        <source
-          src="/videos/red-arcade-glow.mp4"
-          type="video/mp4"
-        />
+      {/* Background video */}
+      <video className="dashboard-video" autoPlay muted loop playsInline>
+        <source src="/assets/videos/red-arcade-glow.mp4" type="video/mp4" />
       </video>
 
       <div className="dashboard-overlay"></div>
 
       {/* NAVBAR */}
       <header className="dashboard-header">
+        <Link to="/" className="dashboard-logo">
+          <img src="/assets/codyyy-logo.jpg" alt="Codyyy Logo" />
+        </Link>
 
-        {/* LOGO */}
-        <div className="dashboard-logo">
-          <Link to="/">
-            <img
-              src="/assets/codyyy-logo.jpg"
-              alt="Codyyy Logo"
-            />
-          </Link>
-        </div>
-
-        {/* CENTER GREETING */}
         <div className="dashboard-greeting">
-          <span className="greeting-symbol">{"<"}</span>
           HEY YA!
-          <span className="greeting-symbol">{">"}</span>
         </div>
 
-        {/* RIGHT NAVIGATION */}
-        <div className="dashboard-nav">
-
-          <Link
-            to="/leaderboard"
-            className="leaderboard-link"
-          >
-            <span>🏆</span>
+        <nav className="dashboard-nav">
+          <span className="leaderboard-link">
             LEADERBOARD
-          </Link>
+          </span>
 
-          <Link
-            to="/profile"
-            className="profile-icon"
-            title="My Profile"
-          >
-            👾
+          <Link to="/login" className="profile-link" title="Log in">
+            <span className="profile-icon">H</span>
           </Link>
-
-        </div>
+        </nav>
       </header>
 
       {/* MAIN CONTENT */}
       <main className="dashboard-main">
+        <section className="dashboard-intro">
+          <p className="dashboard-eyebrow">
+            WELCOME TO THE ARENA
+          </p>
+          <h1>
+            CHOOSE YOUR <span>BATTLE.</span>
+          </h1>
+          <p>
+            Challenge your friends, create your own arena
+            or compete against players around the world.
+          </p>
+        </section>
 
-        <div className="dashboard-heading">
-          <p>WELCOME TO THE ARENA</p>
-          <h1>CHOOSE YOUR BATTLE.</h1>
-          <span>
-            Pick your game mode. Challenge yourself. Climb the ranks.
-          </span>
-        </div>
-
-        {/* FIRST TWO GAME MODES */}
-        <section className="game-modes">
-
+        {/* PRIVATE AND TEMPORARY ROOMS */}
+        <section className="room-grid">
           {/* PRIVATE ROOM */}
-          <Link
-            to="/private-room"
-            className="mode-card private-card"
-          >
-            <div className="mode-content">
-              <span className="mode-label">
-                PLAY WITH FRIENDS
-              </span>
-
+          <article className="room-card private-card">
+            <div className="room-card-content">
+              <span className="room-number">01 / PRIVATE</span>
               <h2>PRIVATE ROOM</h2>
-
               <p>
-                Create your own room, invite your friends
-                and battle together.
+                Your friends. Your room. Your rules.
+                Create a private coding battle and
+                invite your squad.
               </p>
-
-              <span className="mode-button">
-                CREATE / JOIN →
-              </span>
+              <button className="room-action" disabled>
+                CREATE / JOIN ROOM
+                <span>→</span>
+              </button>
             </div>
-          </Link>
+          </article>
 
           {/* TEMPORARY ROOM */}
-          <Link
-            to="/temporary-room"
-            className="mode-card temporary-card"
-          >
-            <div className="mode-content">
-              <span className="mode-label">
-                QUICK MATCH
-              </span>
-
+          <article className="room-card temporary-card">
+            <div className="room-card-content">
+              <span className="room-number">02 / QUICK MATCH</span>
               <h2>TEMPORARY ROOM</h2>
-
               <p>
-                Create or join a quick match.
-                Compete and test your coding skills.
+                Jump into a quick battle.
+                Play a match without maintaining
+                a permanent room.
               </p>
-
-              <span className="mode-button">
-                ENTER ROOM →
-              </span>
+              <button className="room-action" disabled>
+                QUICK MATCH
+                <span>→</span>
+              </button>
             </div>
-          </Link>
-
+          </article>
         </section>
 
         {/* GLOBAL ARENA */}
-        <section className="global-arena-section">
+        <section className="global-arena-card">
+          <div className="global-arena-content">
+            <span className="room-number">
+              03 / WORLDWIDE BATTLE
+            </span>
+            <h2>GLOBAL ARENA</h2>
+            <p>
+              No squad? No problem. Find players online
+              and prove your coding skills against the world.
+            </p>
+            <button className="global-arena-button" disabled>
+              ENTER GLOBAL ARENA →
+            </button>
+          </div>
 
-          <Link
-            to="/global-arena"
-            className="mode-card global-card"
-          >
-            <div className="global-content">
-
-              <span className="mode-label">
-                PLAY WITH THE WORLD
-              </span>
-
-              <h2>GLOBAL ARENA</h2>
-
-              <p>
-                Find random players online.
-                Get matched and compete in real-time
-                against developers worldwide.
-              </p>
-
-              <span className="mode-button">
-                FIND A MATCH →
-              </span>
-
-            </div>
-          </Link>
-
+          <div className="arena-status">
+            <span className="status-dot"></span>
+            GLOBAL MATCHMAKING
+          </div>
         </section>
-
       </main>
 
       {/* FOOTER */}
       <footer className="dashboard-footer">
-
         <div className="footer-brand">
-          CODEYYY <span>•</span> THE CODING BATTLE
+          CODYEYY<span>.</span>
+          <small>THE CODING BATTLE</small>
         </div>
 
-        <div className="footer-links">
-          <Link to="/">HOME</Link>
+        <div className="dashboard-footer-links">
           <Link to="/how-it-works">HOW IT WORKS</Link>
-          <Link to="/leaderboard">LEADERBOARD</Link>
+          <a href="mailto:support@codyyy.com">CONTACT US</a>
+          <span>© 2026 CODYEYY</span>
         </div>
-
-        <p>© 2026 CODY​​YY. ALL RIGHTS RESERVED.</p>
-
       </footer>
 
     </div>

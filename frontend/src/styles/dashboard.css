@@ -1,51 +1,520 @@
 
+/* =========================================
+   CODYEYY - GAMING DASHBOARD
+========================================= */
+
 .dashboard-page {
-  position: relative;
   min-height: 100vh;
-  width: 100%;
+  position: relative;
+  isolation: isolate;
   overflow: hidden;
-  background: #090707;
+  background: #100b0b;
+  color: #fff0d5;
+  display: flex;
+  flex-direction: column;
+  font-family: 'DM Sans', sans-serif;
 }
 
+/* BACKGROUND VIDEO */
 .dashboard-video {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
-}
-
-.dashboard-video-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(8, 5, 5, 0.65),
-      rgba(8, 5, 5, 0.76)
-    ),
-    radial-gradient(
-      circle at center,
-      transparent,
-      rgba(0, 0, 0, 0.45)
-    );
-
+  z-index: -2;
   pointer-events: none;
 }
 
-.dashboard-content {
-  position: relative;
-  z-index: 2;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.dashboard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 7, 8, 0.55),
+    rgba(15, 7, 9, 0.58) 50%,
+    rgba(8, 7, 9, 0.82)
+  );
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .dashboard-video {
+/* NAVBAR */
+.dashboard-header {
+  width: 100%;
+  min-height: 105px;
+  padding: 10px 6%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  background: rgba(15, 10, 10, 0.78);
+  border-bottom: 1px solid rgba(255, 230, 195, 0.3);
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 5;
+}
+
+.dashboard-logo {
+  width: 170px;
+  height: 85px;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.dashboard-greeting {
+  text-align: center;
+  font-family: 'Silkscreen', monospace;
+  font-size: 19px;
+  color: #ffc400;
+  letter-spacing: 2px;
+}
+
+.dashboard-nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 28px;
+}
+
+.leaderboard-link {
+  color: #fff0d5;
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.leaderboard-link:hover {
+  color: #ffc400;
+}
+
+.profile-link {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 2px solid #ffc400;
+  background: #281615;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.profile-link:hover {
+  background: #ed202e;
+  box-shadow: 0 0 20px rgba(237, 32, 46, 0.5);
+  transform: scale(1.07);
+}
+
+.profile-icon {
+  color: #fff0d5;
+  font-family: 'Silkscreen', monospace;
+  font-size: 17px;
+}
+
+/* MAIN CONTENT */
+.dashboard-main {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 45px 6% 55px;
+  flex: 1;
+}
+
+/* INTRO SECTION */
+.dashboard-intro {
+  text-align: center;
+  margin-bottom: 42px;
+}
+
+.dashboard-eyebrow {
+  color: #ffc400;
+  font-family: 'Silkscreen', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin-bottom: 18px;
+}
+
+.dashboard-intro h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(48px, 6vw, 76px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: #fff0d5;
+}
+
+.dashboard-intro h1 span {
+  color: #ed3039;
+}
+
+.dashboard-intro > p:last-child {
+  color: #e1d2c1;
+  font-size: 17px;
+  margin-top: 17px;
+  line-height: 1.6;
+}
+
+/* ROOM GRID */
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px;
+}
+
+/* ROOM CARDS */
+.room-card {
+  position: relative;
+  min-height: 315px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 231, 199, 0.35);
+  border-radius: 12px;
+  background-color: #261515;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.room-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgba(12, 6, 7, 0.94),
+    rgba(18, 8, 9, 0.65),
+    rgba(12, 6, 7, 0.20)
+  );
+}
+
+.room-card:hover {
+  transform: translateY(-6px);
+  border-color: #ffc400;
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.4),
+    0 0 22px rgba(255, 196, 0, 0.12);
+}
+
+/* CARD BACKGROUND IMAGES */
+.private-card {
+  background-image: url("/assets/private-room.jpg");
+}
+
+.temporary-card {
+  background-image: url("/assets/temporary-room.jpg");
+}
+
+/* ROOM CARD CONTENT */
+.room-card-content {
+  width: 100%;
+  max-width: 550px;
+  padding: 32px;
+}
+
+.room-number {
+  display: inline-block;
+  color: #ffc400;
+  font-family: 'Silkscreen', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.room-card h2,
+.global-arena-card h2 {
+  color: #fff0d5;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(35px, 4vw, 48px);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 15px;
+}
+
+.room-card p,
+.global-arena-card p {
+  max-width: 410px;
+  color: #eee0d0;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 23px;
+}
+
+/* ROOM BUTTON */
+.room-action {
+  min-height: 48px;
+  padding: 11px 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border: 1px solid #ffc400;
+  background: #ed252f;
+  color: #fff0d5;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.room-action span {
+  color: #ffc400;
+  font-size: 22px;
+}
+
+/* GLOBAL ARENA */
+.global-arena-card {
+  min-height: 245px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  margin-top: 25px;
+  padding: 35px 45px;
+  border: 1px solid rgba(255, 231, 199, 0.35);
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 10, 18, 0.94),
+      rgba(8, 12, 24, 0.76),
+      rgba(8, 12, 24, 0.38)
+    ),
+    url("/assets/global-arena.jpg");
+
+  background-size: cover;
+  background-position: center;
+  transition: 0.35s ease;
+}
+
+.global-arena-card:hover {
+  border-color: #ffc400;
+  box-shadow: 0 0 25px rgba(10, 145, 220, 0.18);
+}
+
+.global-arena-content {
+  max-width: 650px;
+}
+
+.global-arena-card h2 {
+  font-size: 48px;
+}
+
+.global-arena-button {
+  padding: 14px 24px;
+  border: 1px solid #ffc400;
+  background: #ed252f;
+  color: #fff0d5;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.arena-status {
+  position: absolute;
+  right: 30px;
+  top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #dcefff;
+  font-family: 'Silkscreen', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #27e98c;
+  box-shadow: 0 0 12px #27e98c;
+}
+
+/* FOOTER */
+.dashboard-footer {
+  min-height: 95px;
+  padding: 20px 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: rgba(12, 9, 9, 0.92);
+  border-top: 1px solid rgba(255, 230, 195, 0.3);
+}
+
+.footer-brand {
+  color: #fff0d5;
+  font-family: 'Silkscreen', monospace;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.footer-brand > span {
+  color: #ffc400;
+}
+
+.footer-brand small {
+  display: block;
+  margin-top: 8px;
+  color: #bca995;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.dashboard-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  color: #d2c2b5;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.dashboard-footer-links a {
+  color: #d2c2b5;
+  text-decoration: none;
+}
+
+.dashboard-footer-links a:hover {
+  color: #ffc400;
+}
+
+/* RESPONSIVE TABLET */
+@media (max-width: 900px) {
+  .dashboard-header {
+    padding: 10px 4%;
+  }
+
+  .dashboard-logo {
+    width: 135px;
+  }
+
+  .dashboard-greeting {
+    font-size: 13px;
+  }
+
+  .dashboard-nav {
+    gap: 15px;
+  }
+
+  .room-card {
+    min-height: 290px;
+  }
+
+  .room-card-content {
+    padding: 23px;
+  }
+
+  .dashboard-footer-links {
+    gap: 15px;
+    font-size: 16px;
+  }
+}
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 650px) {
+  .dashboard-header {
+    min-height: 85px;
+    padding: 8px 5%;
+    grid-template-columns: 1fr auto;
+  }
+
+  .dashboard-logo {
+    width: 120px;
+    height: 65px;
+  }
+
+  .dashboard-greeting {
     display: none;
+  }
+
+  .dashboard-nav {
+    gap: 12px;
+  }
+
+  .leaderboard-link {
+    font-size: 19px;
+  }
+
+  .profile-link {
+    width: 40px;
+    height: 40px;
+  }
+
+  .dashboard-main {
+    padding: 42px 5%;
+  }
+
+  .dashboard-intro {
+    margin-bottom: 30px;
+  }
+
+  .dashboard-intro h1 {
+    font-size: 48px;
+  }
+
+  .dashboard-intro > p:last-child {
+    font-size: 14px;
+  }
+
+  .room-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .room-card {
+    min-height: 290px;
+  }
+
+  .global-arena-card {
+    min-height: 300px;
+    margin-top: 18px;
+    padding: 25px;
+  }
+
+  .global-arena-card h2 {
+    font-size: 40px;
+  }
+
+  .arena-status {
+    top: 15px;
+    right: 15px;
+    font-size: 7px;
+  }
+
+  .dashboard-footer {
+    flex-direction: column;
+    text-align: center;
+    padding: 25px 15px;
+  }
+
+  .dashboard-footer-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 16px;
   }
 }
