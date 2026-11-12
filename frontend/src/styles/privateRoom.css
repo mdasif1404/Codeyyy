@@ -1,0 +1,901 @@
+/* =========================================
+   CODYEYY - PRIVATE ROOM PAGE
+========================================= */
+
+.private-room-page {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+  overflow: hidden;
+  background: #100708;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =================================
+   FULL PAGE BACKGROUND VIDEO
+================================= */
+
+.private-background-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.private-background-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 3, 5, 0.55);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Keep page content above the background */
+.private-header,
+.private-main,
+.dashboard-footer {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================
+   MINIMAL NAVBAR
+========================================= */
+
+.private-header {
+  width: 100%;
+  min-height: 95px;
+  padding: 8px 6%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: rgba(15, 8, 9, 0.58);
+  border-bottom: 1px solid rgba(255, 230, 195, 0.22);
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 2;
+}
+
+.private-logo {
+  width: 170px;
+  height: 78px;
+  display: flex;
+  align-items: center;
+}
+
+.private-logo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.private-profile {
+  width: 58px;
+  height: 58px;
+  display: block;
+  overflow: hidden;
+  border: 2px solid #ffc400;
+  border-radius: 50%;
+  background: #100b0b;
+  transition: 0.3s ease;
+}
+
+.private-profile:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 20px rgba(255, 196, 0, 0.4);
+}
+
+.private-profile video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* =========================================
+   MAIN AREA
+========================================= */
+
+.private-main {
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 38px 5% 55px;
+  flex: 1;
+}
+
+.private-heading {
+  text-align: center;
+  margin-bottom: 27px;
+}
+
+.private-heading > p:first-child {
+  color: #ffc400;
+  font-family: 'Silkscreen', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.private-heading h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(45px, 6vw, 66px);
+  font-weight: 900;
+  line-height: 1;
+  color: #fff0d5;
+}
+
+.private-heading h1 span {
+  color: #ed3039;
+}
+
+.private-subtitle {
+  color: #cbbcaf;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+/* =========================================
+   CREATE / JOIN TABS
+========================================= */
+
+.private-tabs {
+  width: min(100%, 520px);
+  margin: 0 auto 25px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.private-tab {
+  min-height: 48px;
+  padding: 12px 15px;
+
+  border: 1px solid rgba(255, 230, 195, 0.28);
+  border-radius: 5px;
+  background: rgba(35, 20, 21, 0.85);
+
+  color: #e8d8c8;
+  font-family: 'Silkscreen', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.private-tab span {
+  color: #ffc400;
+  margin-right: 7px;
+  font-size: 15px;
+}
+
+.private-tab:hover {
+  border-color: #ffc400;
+  color: #ffc400;
+}
+
+.private-tab.active {
+  background: #ed252f;
+  border-color: #ffc400;
+  color: #fff0d5;
+  box-shadow: 0 0 18px rgba(237, 37, 47, 0.2);
+}
+
+/* =========================================
+   CREATE ROOM TWO-COLUMN LAYOUT
+========================================= */
+
+.private-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.private-form-card,
+.join-form-card {
+  border: 1px solid rgba(255, 231, 199, 0.24);
+  border-radius: 10px;
+  background: rgba(25, 15, 17, 0.88);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* FORM CARD */
+
+.private-form-card {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.form-heading {
+  margin-bottom: 2px;
+}
+
+.form-heading > span,
+.access-eyebrow {
+  color: #ffc400;
+  font-family: 'Silkscreen', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.form-heading h2 {
+  margin-top: 10px;
+  color: #fff0d5;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.form-heading p {
+  margin-top: 5px;
+  color: #bfaea2;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* INPUT FIELDS */
+
+.private-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.private-field label {
+  color: #f2dfca;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.private-field input {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+
+  outline: none;
+  border: 1px solid rgba(255, 230, 195, 0.24);
+  border-radius: 5px;
+  background: rgba(10, 7, 8, 0.8);
+
+  color: #fff0d5;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  transition: border-color 0.25s ease;
+}
+
+.private-field input::placeholder {
+  color: #82736e;
+}
+
+.private-field input:focus {
+  border-color: #ffc400;
+  box-shadow: 0 0 0 2px rgba(255, 196, 0, 0.08);
+}
+
+.private-field small {
+  color: #9f8e84;
+  font-size: 11px;
+}
+
+/* PARTICIPANT OPTIONS */
+
+.participant-options {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 9px;
+}
+
+.participant-option {
+  min-height: 42px;
+  border: 1px solid rgba(255, 230, 195, 0.25);
+  border-radius: 5px;
+  background: #120c0d;
+  color: #fff0d5;
+
+  font-family: 'Silkscreen', monospace;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.participant-option:hover,
+.participant-option.selected {
+  background: #ed252f;
+  border-color: #ffc400;
+  color: #fff0d5;
+}
+
+/* DIFFICULTY OPTIONS */
+
+.difficulty-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+
+.difficulty-option {
+  min-height: 42px;
+  border: 1px solid rgba(255, 230, 195, 0.25);
+  border-radius: 5px;
+  background: #120c0d;
+  color: #fff0d5;
+
+  font-family: 'Silkscreen', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.difficulty-option.easy.selected {
+  border-color: #27e98c;
+  color: #27e98c;
+  background: rgba(39, 233, 140, 0.08);
+}
+
+.difficulty-option.medium.selected {
+  border-color: #ffc400;
+  color: #ffc400;
+  background: rgba(255, 196, 0, 0.08);
+}
+
+.difficulty-option.hard.selected {
+  border-color: #ed3039;
+  color: #ff555d;
+  background: rgba(237, 48, 57, 0.08);
+}
+
+/* CREATE BUTTON */
+
+.create-room-button {
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  border: 1px solid #ffc400;
+  border-radius: 5px;
+  background: #ed252f;
+  color: #fff0d5;
+
+  font-family: 'Silkscreen', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.create-room-button span {
+  color: #ffc400;
+  font-size: 18px;
+}
+
+.create-room-button:hover {
+  background: #c91c28;
+  box-shadow: 0 0 22px rgba(237, 37, 47, 0.28);
+  transform: translateY(-2px);
+}
+
+/* =================================
+   TV PANEL
+================================= */
+
+.room-tv-panel {
+  position: relative;
+  width: 100%;
+  max-width: 470px;
+  aspect-ratio: 720 / 900;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #19090b;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 231, 199, 0.24);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  isolation: isolate;
+}
+
+/* The actual TV video frame */
+
+.room-tv-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* TV screen area
+   Coordinates are matched to your uploaded TV video. */
+
+.room-tv-screen {
+  position: absolute;
+
+  left: 15.3%;
+  top: 32.7%;
+  width: 69.4%;
+  height: 36.3%;
+
+  z-index: 1;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 5% 6%;
+  text-align: center;
+
+  color: #fff0d6;
+  background: rgba(85, 0, 8, 0.12);
+
+  border-radius: 13% / 10%;
+  box-sizing: border-box;
+}
+
+/* TV screen typography */
+
+.tv-eyebrow {
+  color: #ffd000;
+  font-family: "Silkscreen", sans-serif;
+  font-size: clamp(6px, 0.75vw, 10px);
+  letter-spacing: 2px;
+  margin: 0 0 5px;
+}
+
+.room-tv-screen h2 {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(19px, 2.3vw, 31px);
+  line-height: 0.95;
+  font-weight: 900;
+  margin: 0 0 7px;
+  color: #fff0d6;
+  text-transform: uppercase;
+}
+
+.tv-description {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(7px, 0.85vw, 11px);
+  line-height: 1.35;
+  margin: 0 0 9px;
+  color: #ffe4df;
+  max-width: 95%;
+}
+
+.tv-code-display {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  /* No box, no border, no background */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 5px 0;
+}
+
+.tv-code-label {
+  font-family: "Silkscreen", sans-serif;
+  font-size: clamp(6px, 0.65vw, 9px);
+  color: #ffe6a0;
+  letter-spacing: 2px;
+}
+
+.tv-room-code {
+  font-family: "Silkscreen", sans-serif;
+  font-size: clamp(18px, 2.2vw, 28px);
+  letter-spacing: 4px;
+  color: #ffd000;
+  text-shadow: 0 0 10px rgba(255, 208, 0, 0.45);
+  overflow-wrap: anywhere;
+}
+
+.tv-code-caption {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(7px, 0.7vw, 9px);
+  letter-spacing: 1px;
+  color: #ffe0d5;
+}
+
+.tv-instructions {
+  position: absolute;
+
+  /* Position on the dark speaker section */
+  top: 80%;
+  left: 20%;
+  width: 68%;
+
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  text-align: left;
+}
+
+.tv-instructions p {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+
+  margin: 0;
+
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(7px, 0.8vw, 10px);
+  line-height: 1.5;
+  font-weight: 600;
+
+  color: #fff0e8;
+
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.tv-instructions span {
+  flex-shrink: 0;
+
+  font-family: "Silkscreen", sans-serif;
+  color: #ffd000;
+  font-size: inherit;
+}
+
+/* =====================================
+   TEAM WAITING CARD
+===================================== */
+
+.team-waiting-panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  width: 100%;
+  min-height: 550px;
+
+  border: 1px solid #493638;
+  border-radius: 14px;
+
+  background: #18090b;
+}
+
+/* Background animation */
+
+.team-waiting-video {
+  position: absolute;
+  inset: -5px;
+
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+
+  object-fit: cover;
+
+  filter: blur(3px);
+  opacity: 0.8;
+
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Dark overlay keeps the text readable */
+
+.team-waiting-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    180deg,
+    rgba(15, 3, 5, 0.42),
+    rgba(15, 3, 5, 0.72)
+  );
+
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Content above the animation */
+
+.team-waiting-content {
+  position: relative;
+  z-index: 1;
+
+  min-height: 550px;
+  padding: 65px 32px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.team-waiting-content h2 {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(36px, 4vw, 48px);
+  line-height: 0.98;
+  font-weight: 900;
+
+  color: #fff0d6;
+  margin: 15px 0;
+}
+
+.team-waiting-content .join-info-description {
+  max-width: 360px;
+
+  font-family: "DM Sans", sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+
+  color: #d6c2bb;
+}
+
+.join-info-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 30px;
+
+  font-family: "Silkscreen", sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+
+  color: #fff0d6;
+}
+
+.join-info-status span {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+  background: #21e58b;
+
+  box-shadow: 0 0 12px #21e58b;
+}
+
+/* =========================================
+   JOIN ROOM LAYOUT
+========================================= */
+
+.join-workspace {
+  max-width: 900px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.join-form-card {
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 25px;
+}
+
+.access-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 23px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 196, 0, 0.55);
+  border-radius: 8px;
+  background: rgba(237, 37, 47, 0.12);
+
+  color: #ffc400;
+  font-family: 'Silkscreen', monospace;
+  font-size: 24px;
+}
+
+.team-waiting-content .join-info-label {
+  color: #ffc400;
+  font-family: 'Silkscreen', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.dashboard-footer {
+  min-height: 95px;
+  padding: 20px 6%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  background: rgba(12, 9, 9, 0.92);
+  border-top: 1px solid rgba(255, 230, 195, 0.3);
+}
+
+.footer-brand {
+  color: #fff0d5;
+  font-family: 'Silkscreen', monospace;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.footer-brand > span {
+  color: #ffc400;
+}
+
+.footer-brand small {
+  display: block;
+  margin-top: 8px;
+  color: #bca995;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.dashboard-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+
+  color: #d2c2b5;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.dashboard-footer-links a {
+  color: #d2c2b5;
+  text-decoration: none;
+}
+
+.dashboard-footer-links a:hover {
+  color: #ffc400;
+}
+
+/* =========================================
+   TABLET & RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+  .private-workspace {
+    grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.9fr);
+  }
+
+  .private-form-card {
+    padding: 24px;
+  }
+
+  .room-tv-panel {
+    max-width: 390px;
+    margin: 20px auto;
+  }
+
+  .room-tv-screen h2 {
+    font-size: clamp(19px, 4vw, 27px);
+  }
+
+  .tv-description {
+    font-size: clamp(8px, 1.5vw, 11px);
+  }
+
+  .tv-instructions p {
+    font-size: clamp(7px, 1.3vw, 9px);
+  }
+
+  .dashboard-footer-links {
+    gap: 15px;
+    font-size: 16px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+  .private-header {
+    min-height: 78px;
+    padding: 8px 5%;
+  }
+
+  .private-logo {
+    width: 125px;
+    height: 60px;
+  }
+
+  .private-profile {
+    width: 45px;
+    height: 45px;
+  }
+
+  .private-main {
+    padding: 30px 5% 40px;
+  }
+
+  .private-heading {
+    margin-bottom: 22px;
+  }
+
+  .private-heading h1 {
+    font-size: 45px;
+  }
+
+  .private-subtitle {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .private-tabs {
+    gap: 7px;
+    margin-bottom: 18px;
+  }
+
+  .private-tab {
+    min-height: 45px;
+    padding: 10px 5px;
+    font-size: 8px;
+  }
+
+  .private-workspace,
+  .join-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .private-form-card,
+  .join-form-card {
+    padding: 22px 18px;
+    gap: 17px;
+  }
+
+  .room-tv-panel {
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .team-waiting-panel {
+    min-height: auto;
+  }
+
+  .team-waiting-content {
+    min-height: auto;
+    padding: 35px 24px;
+  }
+
+  .dashboard-footer {
+    flex-direction: column;
+    text-align: center;
+    padding: 25px 15px;
+  }
+
+  .dashboard-footer-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    font-size: 15px;
+  }
+}

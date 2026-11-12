@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HowItWorks from "./pages/HowItWorks";
 import Dashboard from "./pages/Dashboard";
+import PrivateRoom from "./pages/PrivateRoom";
 
 import IntroAnimation from "./components/IntroAnimation";
 
@@ -17,17 +18,13 @@ function App() {
 
       {/* Website pages */}
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-
-        {/* Public dashboard - no login required */}
-        <Route path="/dashboard" element={<Dashboard />} />
-
-        <Route path="/login" element={<LoginPage />} />
-
-        <Route path="/register" element={<RegisterPage />} />
-
-        <Route path="/how-it-works" element={<HowItWorks />} />
-      </Routes>
+  <Route path="/" element={<LandingPage />} />
+  <Route path="/dashboard" element={<Dashboard />} />
+  <Route path="/private-room" element={<PrivateRoom />} />
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="/register" element={<RegisterPage />} />
+  <Route path="/how-it-works" element={<HowItWorks />} />
+</Routes>
     </>
   );
 }
