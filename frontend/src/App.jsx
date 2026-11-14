@@ -10,6 +10,10 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoom from "./pages/PrivateRoom";
 import PrivateRoomDashboard from "./pages/PrivateRoomDashboard";
 import TemporaryRoom from "./pages/TemporaryRoom";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
+
+// Coding Arena
+import CodingArena from "./pages/CodingArena/CodingArena";
 
 import IntroAnimation from "./components/IntroAnimation";
 
@@ -46,6 +50,11 @@ function App() {
 
         {/* Temporary room */}
         <Route path="/temporary-room" element={<TemporaryRoom />} />
+
+        {/* Coding Arena */}
+        <Route path="/arena" element={<CodingArena />} />
+
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
       </Routes>
     </>
   );

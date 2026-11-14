@@ -4,10 +4,7 @@
    LOGIN & REGISTER
 ========================================= */
 
-
-/* =========================================
-   AUTHENTICATION PAGE BACKGROUND
-========================================= */
+/* AUTHENTICATION PAGE BACKGROUND */
 
 .auth-page {
     min-height: 100vh;
@@ -19,7 +16,7 @@
     justify-content: center;
 
     overflow: hidden;
-    padding: 100px 20px 45px;
+    padding: 90px 20px 30px;
     box-sizing: border-box;
 
     background:
@@ -39,10 +36,7 @@
     font-family: 'DM Sans', sans-serif;
 }
 
-
-/* =========================================
-   GLOWING BACKGROUND EFFECTS
-========================================= */
+/* GLOWING BACKGROUND EFFECTS */
 
 .auth-glow {
     position: absolute;
@@ -81,10 +75,7 @@
     }
 }
 
-
-/* =========================================
-   CODYEYY LOGO
-========================================= */
+/* CODYEYY LOGO */
 
 .auth-logo {
     position: absolute;
@@ -99,10 +90,7 @@
     object-fit: contain;
 }
 
-
-/* =========================================
-   CENTERED CONTENT
-========================================= */
+/* CENTERED CONTENT */
 
 .auth-main {
     position: relative;
@@ -115,20 +103,19 @@
     align-items: center;
 }
 
-
 /* =========================================
    AUTHENTICATION CARD
 ========================================= */
 
-.auth-card {
+.auth-page .auth-card {
     width: 100%;
-    max-width: 550px;
+    max-width: 470px;
 
     box-sizing: border-box;
-    padding: 48px 46px;
+    padding: 36px 38px;
 
     border: 1px solid rgba(255, 221, 180, 0.20);
-    border-radius: 20px;
+    border-radius: 18px;
 
     background: rgba(27, 19, 19, 0.88);
 
@@ -155,12 +142,9 @@
     }
 }
 
+/* HEADINGS */
 
-/* =========================================
-   HEADINGS
-========================================= */
-
-.auth-tagline {
+.auth-page .auth-tagline {
     color: #ffc400;
     text-align: center;
 
@@ -169,15 +153,15 @@
     font-weight: 700;
 
     letter-spacing: 2px;
-    margin-bottom: 25px;
+    margin-bottom: 18px;
 }
 
-.auth-card h1 {
+.auth-page .auth-card h1 {
     color: #fff0d5;
     text-align: center;
 
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(38px, 5vw, 54px);
+    font-size: clamp(36px, 5vw, 48px);
     font-weight: 900;
 
     letter-spacing: -1px;
@@ -185,96 +169,90 @@
 
     text-transform: uppercase;
 
-    margin: 0 0 15px;
+    margin: 0 0 12px;
 }
 
-.auth-description {
+.auth-page .auth-description {
     color: #d2c2b5;
     text-align: center;
 
     font-family: 'DM Sans', sans-serif;
-    font-size: 17px;
+    font-size: 15px;
 
-    margin: 0 0 42px;
+    margin: 0 0 26px;
 }
 
+/* FORM */
 
-/* =========================================
-   FORM
-========================================= */
-
-.auth-form {
+.auth-page .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 20px;
 }
 
-.auth-form-group {
+.auth-page .auth-form-group {
     display: flex;
     flex-direction: column;
-    gap: 11px;
+    gap: 8px;
 }
 
-.auth-form-group label {
+.auth-page .auth-form-group label {
     color: #fff0d5;
 
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 21px;
+    font-size: 19px;
     font-weight: 900;
 
     letter-spacing: 0.3px;
     text-transform: uppercase;
 }
 
-.auth-form-group input {
+.auth-page .auth-form-group input {
     width: 100%;
-    height: 60px;
+    height: 52px;
 
-    padding: 0 20px;
+    padding: 0 16px;
     box-sizing: border-box;
 
     background: rgba(7, 7, 7, 0.75);
     color: #fff0d5;
 
     border: 1px solid #5b4639;
-    border-radius: 8px;
+    border-radius: 7px;
 
     font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
 
     outline: none;
     transition: 0.3s ease;
 }
 
-.auth-form-group input:focus {
+.auth-page .auth-form-group input:focus {
     border-color: #ffc400;
 
     box-shadow:
         0 0 15px rgba(255, 196, 0, 0.12);
 }
 
-.auth-form-group input::placeholder {
+.auth-page .auth-form-group input::placeholder {
     color: #938477;
 }
 
+/* PASSWORD FIELD */
 
-/* =========================================
-   PASSWORD FIELD
-========================================= */
-
-.auth-password {
+.auth-page .auth-password {
     position: relative;
     width: 100%;
 }
 
-.auth-password input {
-    padding-right: 85px;
+.auth-page .auth-password input {
+    padding-right: 75px;
 }
 
-.auth-password button {
+.auth-page .auth-password button {
     position: absolute;
 
-    right: 17px;
+    right: 15px;
     top: 50%;
 
     transform: translateY(-50%);
@@ -285,18 +263,15 @@
     color: #ffc400;
 
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 900;
 
     cursor: pointer;
 }
 
+/* REMEMBER ME / FORGOT PASSWORD */
 
-/* =========================================
-   REMEMBER ME / FORGOT PASSWORD
-========================================= */
-
-.auth-options {
+.auth-page .auth-options {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -305,26 +280,26 @@
 
     color: #fff0d5;
     font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
+    font-size: 13px;
 }
 
-.remember-label {
+.auth-page .remember-label {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px;
 
     color: #fff0d5;
 }
 
-.remember-label input {
+.auth-page .remember-label input {
     accent-color: #ed202e;
 
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
 }
 
-.auth-options a,
-.auth-switch a {
+.auth-page .auth-options a,
+.auth-page .auth-switch a {
     color: #ffc400;
 
     font-family: 'DM Sans', sans-serif;
@@ -333,19 +308,16 @@
     text-decoration: none;
 }
 
-.auth-options a:hover,
-.auth-switch a:hover {
+.auth-page .auth-options a:hover,
+.auth-page .auth-switch a:hover {
     text-decoration: underline;
 }
 
+/* SUBMIT BUTTON */
 
-/* =========================================
-   SUBMIT BUTTON
-========================================= */
-
-.auth-submit {
+.auth-page .auth-submit {
     width: 100%;
-    min-height: 68px;
+    min-height: 58px;
 
     border: 2px solid #ffc400;
 
@@ -353,7 +325,7 @@
     color: #fff0d5;
 
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 27px;
+    font-size: 24px;
     font-weight: 900;
 
     letter-spacing: 0.5px;
@@ -363,7 +335,7 @@
     transition: 0.3s ease;
 }
 
-.auth-submit:hover {
+.auth-page .auth-submit:hover {
     background: #ff303e;
 
     box-shadow:
@@ -372,44 +344,38 @@
     transform: translateY(-2px);
 }
 
-.auth-submit:disabled {
+.auth-page .auth-submit:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
 }
 
+/* ERROR AND SUCCESS MESSAGES */
 
-/* =========================================
-   ERROR AND SUCCESS MESSAGES
-========================================= */
-
-.auth-error {
+.auth-page .auth-error {
     color: #ff6262;
-    font-size: 14px;
+    font-size: 13px;
     margin: 0;
 }
 
-.auth-success {
+.auth-page .auth-success {
     color: #22c55e;
-    font-size: 14px;
+    font-size: 13px;
     margin: 0;
 }
 
+/* SWITCH / BACK LINKS */
 
-/* =========================================
-   SWITCH / BACK LINKS
-========================================= */
-
-.auth-switch {
+.auth-page .auth-switch {
     text-align: center;
 
     color: #d2c2b5;
 
-    margin: 30px 0 25px;
-    font-size: 16px;
+    margin: 22px 0 16px;
+    font-size: 14px;
 }
 
-.auth-back {
+.auth-page .auth-back {
     display: block;
 
     text-align: center;
@@ -417,26 +383,21 @@
     color: #c6b7aa;
 
     text-decoration: underline;
-    margin-top: 25px;
+    margin-top: 16px;
+    font-size: 14px;
 }
 
+/* REGISTER CARD */
 
-/* =========================================
-   REGISTER CARD
-========================================= */
-
-.auth-card-register {
-    max-width: 550px;
+.auth-page .auth-card-register {
+    max-width: 470px;
 }
 
-.auth-card-register .auth-description {
-    margin-bottom: 32px;
+.auth-page .auth-card-register .auth-description {
+    margin-bottom: 24px;
 }
 
-
-/* =========================================
-   MOBILE RESPONSIVENESS
-========================================= */
+/* MOBILE RESPONSIVENESS */
 
 @media (max-width: 600px) {
 
@@ -454,35 +415,72 @@
         width: 115px;
     }
 
-    .auth-card {
-        padding: 35px 23px;
+    .auth-page .auth-card {
+        max-width: 440px;
+        padding: 30px 23px;
         border-radius: 15px;
     }
 
-    .auth-card h1 {
+    .auth-page .auth-card h1 {
         font-size: 36px;
     }
 
-    .auth-description {
-        font-size: 15px;
-        margin-bottom: 30px;
+    .auth-page .auth-description {
+        font-size: 14px;
+        margin-bottom: 24px;
     }
 
-    .auth-tagline {
+    .auth-page .auth-tagline {
         font-size: 9px;
         letter-spacing: 1px;
     }
 
-    .auth-options {
-        font-size: 13px;
+    .auth-page .auth-options {
+        font-size: 12px;
     }
 
-    .auth-submit {
-        min-height: 58px;
-        font-size: 23px;
+    .auth-page .auth-submit {
+        min-height: 54px;
+        font-size: 22px;
     }
 
-    .auth-form-group label {
-        font-size: 19px;
+    .auth-page .auth-form-group label {
+        font-size: 18px;
     }
+}
+
+
+
+/* EMAIL VERIFICATION PAGE */
+
+.verify-email-address {
+  text-align: center;
+  color: #e9bf32;
+  font-weight: 700;
+  margin: 12px 0 24px;
+  overflow-wrap: anywhere;
+}
+
+.verify-resend {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.verify-resend p {
+  margin-bottom: 8px;
+  color: #b9a49b;
+  font-size: 14px;
+}
+
+.verify-resend button {
+  background: transparent;
+  border: none;
+  color: #e9bf32;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.verify-resend button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }

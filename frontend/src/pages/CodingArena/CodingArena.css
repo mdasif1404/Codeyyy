@@ -1,0 +1,262 @@
+
+/* MAIN ARENA LAYOUT */
+
+.coding-arena {
+  min-height: 100vh;
+  background: #f7f7f7;
+  color: #210c10;
+  padding-bottom: 40px;
+  font-family: Arial, sans-serif;
+}
+
+.arena-heading {
+  text-align: center;
+  padding: 24px 15px;
+}
+
+.arena-heading h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.arena-heading p {
+  margin-top: 10px;
+  color: #b8860b;
+  font-weight: 600;
+}
+
+.arena-workspace {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: 20px;
+  padding: 10px 24px;
+  max-width: 1600px;
+  margin: auto;
+}
+
+.problem-panel,
+.editor-panel {
+  background: #210c10;
+  color: #fff0d7;
+  border: 2px solid #4a1620;
+  border-radius: 8px;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #3b1118;
+  border-bottom: 2px solid #e9bf32;
+}
+
+.panel-heading h2 {
+  margin: 0;
+  color: #e9bf32;
+  font-size: 16px;
+}
+
+.panel-heading span {
+  color: #fff0d7;
+  font-size: 13px;
+}
+
+.panel-content {
+  padding: 22px;
+  line-height: 1.7;
+}
+
+.panel-content h3 {
+  color: #e9bf32;
+  font-size: 24px;
+}
+
+.panel-content h4 {
+  color: #e9bf32;
+  margin-top: 24px;
+}
+
+.panel-content pre {
+  padding: 14px;
+  background: #101116;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.editor-placeholder {
+  min-height: 390px;
+  display: grid;
+  place-items: center;
+  background: #101116;
+  color: #b9a49b;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px;
+}
+
+.editor-actions button {
+  padding: 12px 22px;
+  border-radius: 5px;
+  font-weight: bold;
+  border: 2px solid #e9bf32;
+}
+
+.run-btn {
+  background: #210c10;
+  color: #fff0d7;
+}
+
+.submit-btn {
+  background: #ed2435;
+  color: white;
+}
+
+.editor-actions button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .arena-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =================================
+   CODING ARENA NAVBAR
+================================= */
+
+.arena-navbar {
+  width: calc(100% - 36px);
+  min-height: 66px;
+  margin: 18px auto 0;
+  padding: 12px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  background: #210c10;
+  color: #fff0d7;
+
+  border: 2px solid #4a1620;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+/* BRAND */
+
+.arena-brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-text {
+  color: #e9bf32;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+/* ROOM CODE */
+
+.arena-room {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.arena-room strong {
+  color: #e9bf32;
+  letter-spacing: 1px;
+}
+
+.copy-room-btn {
+  padding: 6px 13px;
+
+  background: transparent;
+  color: #e9bf32;
+
+  border: 1px solid #a77e21;
+  border-radius: 5px;
+
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.copy-room-btn:hover {
+  background: #e9bf32;
+  color: #210c10;
+}
+
+/* RIGHT SIDE */
+
+.arena-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.connection-indicator {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+
+  background: #20df83;
+  border-radius: 50%;
+
+  box-shadow: 0 0 8px #20df83;
+}
+
+.connection-text {
+  color: #20df83;
+}
+
+.navbar-players {
+  margin-left: 12px;
+  color: #e9bf32;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+  .arena-navbar {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 12px;
+  }
+
+  .brand-text {
+    font-size: 22px;
+  }
+
+  .arena-room {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .arena-navbar-right {
+    gap: 7px;
+    font-size: 11px;
+  }
+}
