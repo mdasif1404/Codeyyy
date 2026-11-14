@@ -160,10 +160,10 @@ function Dashboard() {
                 a permanent room.
               </p>
 
-              <button className="room-action" disabled>
+              <Link to="/temporary-room" className="room-action">
                 QUICK MATCH
                 <span>→</span>
-              </button>
+              </Link>
             </div>
           </article>
 

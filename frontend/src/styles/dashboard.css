@@ -420,30 +420,29 @@
 /* ROOM BUTTON */
 
 .room-action {
-  min-height: 48px;
-  padding: 11px 19px;
-
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: center;
+  gap: 18px;
+  padding: 15px 22px;
+  background: #ed2435;
+  border: 1px solid #e9bf32;
+  color: #fff0d7;
+  font-family: inherit;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
 
-  border: 1px solid #ffc400;
-  background: #ed252f;
-  color: #fff0d5;
-
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 19px;
-  font-weight: 800;
-  letter-spacing: 1px;
-
-  cursor: not-allowed;
-  opacity: 0.85;
+.room-action:hover {
+  background: #ff3548;
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(237, 36, 53, 0.4);
 }
 
 .room-action span {
-  color: #ffc400;
-  font-size: 22px;
+  color: #e9bf32;
 }
 
 /* =========================================
