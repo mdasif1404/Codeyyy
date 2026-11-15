@@ -1,25 +1,52 @@
 
-/* Global layout reset */
+/* ===================================
+   CODYEYY - GLOBAL FOUNDATION
+=================================== */
 
-* {
-  margin: 0;
-  padding: 0;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html,
-body {
+html {
   width: 100%;
   min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 body {
-  display: block;
+  width: 100%;
   min-width: 320px;
-  background: #0b0909;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: block;
+  background: #100909;
+  font-family: "DM Sans", sans-serif;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img,
+video {
+  max-width: 100%;
 }

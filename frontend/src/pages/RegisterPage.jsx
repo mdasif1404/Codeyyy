@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import api from "../services/api";
 import AuthLayout from "../components/AuthLayout";
@@ -14,38 +14,36 @@ function RegisterPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     setError("");
-    setSuccess("");
     setLoading(true);
+
+    const normalizedEmail = email.trim().toLowerCase();
 
     try {
       const response = await api.post("/auth/register", {
         username: username.trim(),
-        email: email.trim().toLowerCase(),
+        email: normalizedEmail,
         password
       });
 
       if (response.data.success) {
-        setSuccess(
-          response.data.message || "Account created successfully!"
-        );
-
-        setUsername("");
-        setEmail("");
-        setPassword("");
-
-        console.log("Registered user:", response.data.user);
+        // Registration is complete only after email verification.
+        navigate("/verify-email", {
+          state: {
+            email: normalizedEmail
+          }
+        });
       } else {
         setError(
           response.data.message || "Registration failed."
         );
       }
-
     } catch (err) {
       console.error("Registration error:", err);
 
@@ -53,7 +51,6 @@ function RegisterPage() {
         err.response?.data?.message ||
         "Registration failed. Please try again."
       );
-
     } finally {
       setLoading(false);
     }
@@ -61,9 +58,7 @@ function RegisterPage() {
 
   return (
     <AuthLayout>
-
       <section className="auth-card auth-card-register">
-
         <p className="auth-tagline">
           YOUR BATTLE STARTS HERE
         </p>
@@ -75,9 +70,7 @@ function RegisterPage() {
         </p>
 
         <form className="auth-form" onSubmit={handleRegister}>
-
           <div className="auth-form-group">
-
             <label htmlFor="register-username">
               USERNAME
             </label>
@@ -94,11 +87,9 @@ function RegisterPage() {
               autoComplete="username"
               required
             />
-
           </div>
 
           <div className="auth-form-group">
-
             <label htmlFor="register-email">
               EMAIL ADDRESS
             </label>
@@ -113,17 +104,14 @@ function RegisterPage() {
               autoComplete="email"
               required
             />
-
           </div>
 
           <div className="auth-form-group">
-
             <label htmlFor="register-password">
               PASSWORD
             </label>
 
             <div className="auth-password">
-
               <input
                 type={showPassword ? "text" : "password"}
                 id="register-password"
@@ -143,20 +131,12 @@ function RegisterPage() {
               >
                 {showPassword ? "HIDE" : "SHOW"}
               </button>
-
             </div>
-
           </div>
 
           {error && (
             <p role="alert" className="auth-error">
               {error}
-            </p>
-          )}
-
-          {success && (
-            <p role="status" className="auth-success">
-              {success}
             </p>
           )}
 
@@ -167,7 +147,6 @@ function RegisterPage() {
           >
             {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT →"}
           </button>
-
         </form>
 
         <p className="auth-switch">
@@ -180,9 +159,7 @@ function RegisterPage() {
         <Link to="/" className="auth-back">
           ← Back to homepage
         </Link>
-
       </section>
-
     </AuthLayout>
   );
 }

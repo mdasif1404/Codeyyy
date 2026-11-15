@@ -9,7 +9,7 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -24,8 +24,7 @@ function LoginPage() {
     try {
       const response = await api.post("/auth/login", {
         email: email.trim().toLowerCase(),
-        password,
-        rememberMe
+        password
       });
 
       if (response.data.success) {
@@ -36,15 +35,13 @@ function LoginPage() {
           response.data.message || "Login failed. Please try again."
         );
       }
-
     } catch (err) {
+      console.error("Login error:", err);
+
       setError(
         err.response?.data?.message ||
         "Login failed. Please check your credentials."
       );
-
-      console.error("Login error:", err);
-
     } finally {
       setLoading(false);
     }
@@ -52,9 +49,7 @@ function LoginPage() {
 
   return (
     <AuthLayout>
-
       <section className="auth-card">
-
         <p className="auth-tagline">
           WELCOME BACK, CHALLENGER
         </p>
@@ -66,7 +61,6 @@ function LoginPage() {
         </p>
 
         <form className="auth-form" onSubmit={handleLogin}>
-
           <div className="auth-form-group">
             <label htmlFor="login-email">
               EMAIL ADDRESS
@@ -85,13 +79,11 @@ function LoginPage() {
           </div>
 
           <div className="auth-form-group">
-
             <label htmlFor="login-password">
               PASSWORD
             </label>
 
             <div className="auth-password">
-
               <input
                 type={showPassword ? "text" : "password"}
                 id="login-password"
@@ -109,25 +101,13 @@ function LoginPage() {
               >
                 {showPassword ? "HIDE" : "SHOW"}
               </button>
-
             </div>
           </div>
 
           <div className="auth-options">
-
-            <label className="remember-label">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              Remember me
-            </label>
-
             <Link to="/forgot-password">
               Forgot password?
             </Link>
-
           </div>
 
           {error && (
@@ -143,7 +123,6 @@ function LoginPage() {
           >
             {loading ? "ENTERING..." : "ENTER THE ARENA →"}
           </button>
-
         </form>
 
         <p className="auth-switch">
@@ -156,9 +135,7 @@ function LoginPage() {
         <Link to="/" className="auth-back">
           ← Back to homepage
         </Link>
-
       </section>
-
     </AuthLayout>
   );
 }

@@ -1,6 +1,89 @@
+/* =========================================
+   SHARED NAVBAR - SAME AS LANDING PAGE
+========================================= */
+
+.how-page .site-header {
+  width: 100%;
+  min-height: 110px;
+  padding: 10px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  background: #100b0b;
+  position: relative;
+  z-index: 100;
+  border-bottom: 2px solid #f5e7c5;
+}
+
+.how-page .logo-link {
+  display: flex;
+  align-items: center;
+  width: 210px;
+  height: 90px;
+  flex-shrink: 0;
+}
+
+.how-page .logo-link img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.how-page .pixel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 25px;
+  flex-wrap: nowrap;
+}
+
+.how-page .nav-pixel {
+  display: block;
+  padding: 3px;
+  background: #fff0d5;
+  text-decoration: none;
+  white-space: nowrap;
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
+    0 8px
+  );
+  transition: 0.25s ease;
+}
+
+.how-page .nav-pixel span {
+  display: block;
+  padding: 12px 23px;
+  background: #100b0b;
+  color: #fff0d5;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.how-page .nav-pixel:hover {
+  background: #ffbd00;
+  transform: translateY(-3px);
+}
+
+.how-page .nav-register {
+  background: #ff3039;
+}
+
+.how-page .nav-register span {
+  background: #ed252f;
+}
+
 
 /* =========================================
-   CODEYYY - HOW IT WORKS PAGE
+   CODEYYY - HOW IT WORKS PAGE BASE
 ========================================= */
 
 html,
@@ -15,7 +98,7 @@ body,
 .how-page {
   width: 100%;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
   background: #100b0b;
   color: #fff0d5;
   font-family: 'DM Sans', sans-serif;
@@ -766,7 +849,29 @@ body,
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 650px) {
+  .how-page .site-header {
+    padding: 12px 5%;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .how-page .logo-link {
+    width: 150px;
+    height: 70px;
+  }
+
+  .how-page .pixel-nav {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .how-page .nav-pixel span {
+    font-size: 16px;
+    padding: 10px 14px;
+  }
+
   .how-hero {
     min-height: 550px;
     padding: 75px 6%;
