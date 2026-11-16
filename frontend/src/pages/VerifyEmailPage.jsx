@@ -2,12 +2,13 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import api from "../services/api";
 import AuthLayout from "../components/AuthLayout";
+import { useAuth } from "../context/authContext";
 
 function VerifyEmailPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { verifyEmail, resendOTP } = useAuth();
 
   const email = location.state?.email || "";
 
@@ -51,18 +52,15 @@ function VerifyEmailPage() {
     setLoading(true);
 
     try {
-      const response = await api.post("/auth/verify-email", {
+      const response = await verifyEmail({
         email,
         otp
       });
 
-      if (response.data.success) {
-        // Backend has already set the HttpOnly JWT cookie.
+      if (response.success) {
         navigate("/dashboard", { replace: true });
       } else {
-        setError(
-          response.data.message || "OTP verification failed."
-        );
+        setError(response.message || "OTP verification failed.");
       }
     } catch (err) {
       console.error("OTP verification error:", err);
@@ -84,29 +82,31 @@ function VerifyEmailPage() {
     setResending(true);
 
     try {
-      const response = await api.post("/auth/resend-otp", {
-        email
-      });
+      const response = await resendOTP(email);
 
-      if (response.data.success) {
+      if (response.success) {
         setMessage(
-          response.data.message || "A new OTP has been sent."
+          response.message || "A new OTP has been sent."
         );
 
         setOtp("");
         setCountdown(60);
       } else {
-        setError(
-          response.data.message || "Could not resend OTP."
-        );
+        setError(response.message || "Could not resend OTP.");
       }
     } catch (err) {
       console.error("Resend OTP error:", err);
+
+      const retryAfter = err.response?.data?.retryAfter;
 
       setError(
         err.response?.data?.message ||
         "Unable to resend OTP. Please try again."
       );
+
+      if (retryAfter) {
+        setCountdown(retryAfter);
+      }
     } finally {
       setResending(false);
     }

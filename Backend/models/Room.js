@@ -15,6 +15,20 @@ const roomSchema = new mongoose.Schema({
     maxlength: 50
   },
 
+   // Hashed password for private room access
+  passwordHash: {
+    type: String,
+    select: false,
+    default: null
+  },
+
+  roomType: {
+    type: String,
+    enum: ["permanent", "temporary"],
+    default: "permanent",
+    required: true
+  },
+
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -28,12 +42,14 @@ const roomSchema = new mongoose.Schema({
     max: 100
   },
 
-  status: {
+  // Room availability
+  roomStatus: {
     type: String,
     enum: ["active", "archived"],
     default: "active"
   },
 
+  // Room settings
   settings: {
     language: {
       type: String,
@@ -51,11 +67,50 @@ const roomSchema = new mongoose.Schema({
     }
   },
 
+  // Selected by room creator
+  difficulty: {
+    type: String,
+    enum: ["Easy", "Medium", "Hard"],
+    required: true
+  },
+
+  // Randomly assigned by backend when match starts
+  challenge: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Challenge",
+    default: null
+  },
+
+  currentMatch: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Match",
+    default: null
+  },
+
+  // Match lifecycle
+  matchStatus: {
+    type: String,
+    enum: ["waiting", "active", "completed"],
+    default: "waiting"
+  },
+
+  startedAt: {
+    type: Date,
+    default: null
+  },
+
+  endedAt: {
+    type: Date,
+    default: null
+  },
+
   totalMatches: {
     type: Number,
     default: 0
   }
 
 }, { timestamps: true });
+
+roomSchema.index({ owner: 1, roomStatus: 1 });
 
 export default mongoose.model("Room", roomSchema);

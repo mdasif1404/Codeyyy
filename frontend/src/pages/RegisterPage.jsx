@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import api from "../services/api";
 import AuthLayout from "../components/AuthLayout";
+import { useAuth } from "../context/authContext";
 
 function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +16,7 @@ function RegisterPage() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -26,23 +27,20 @@ function RegisterPage() {
     const normalizedEmail = email.trim().toLowerCase();
 
     try {
-      const response = await api.post("/auth/register", {
+      const response = await register({
         username: username.trim(),
         email: normalizedEmail,
         password
       });
 
-      if (response.data.success) {
-        // Registration is complete only after email verification.
+      if (response.success) {
         navigate("/verify-email", {
           state: {
             email: normalizedEmail
           }
         });
       } else {
-        setError(
-          response.data.message || "Registration failed."
-        );
+        setError(response.message || "Registration failed.");
       }
     } catch (err) {
       console.error("Registration error:", err);

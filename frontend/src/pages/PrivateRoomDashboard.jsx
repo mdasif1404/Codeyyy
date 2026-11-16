@@ -1,49 +1,13 @@
-
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import api from "../services/api";
+import { useAuth } from "../context/authContext";
 import "../styles/privateRoomDashboard.css";
+import socket from "../services/socket";
 
 // Temporary sample data.
 // Later, replace this with player data from your backend.
-const initialPlayers = [
-  {
-    id: "HRS102",
-    username: "HARSHA",
-    totalPoints: 1250,
-    wins: 18,
-    matchesPlayed: 25,
-    rating: 4.8,
-    isCurrentUser: true,
-    avatar: "/assets/avatars/harsha.png",
-  },
-  {
-    id: "ASF204",
-    username: "ASIF",
-    totalPoints: 980,
-    wins: 14,
-    matchesPlayed: 22,
-    rating: 4.5,
-    avatar: "/assets/avatars/asif.png",
-  },
-  {
-    id: "UMA301",
-    username: "UMA",
-    totalPoints: 750,
-    wins: 10,
-    matchesPlayed: 18,
-    rating: 4.2,
-    avatar: "/assets/avatars/uma.png",
-  },
-  {
-    id: "PLY404",
-    username: "PLAYER 04",
-    totalPoints: 420,
-    wins: 5,
-    matchesPlayed: 15,
-    rating: 3.9,
-    avatar: "/assets/avatars/default.png",
-  },
-];
+
 
 // Continuous pixel-style progress bar
 function PixelProgressBar({ percentage }) {
@@ -67,19 +31,12 @@ function PixelProgressBar({ percentage }) {
 
 // Individual player card
 function PlayerCard({ player, rank, selected, onClick }) {
-  const winRate =
-    player.matchesPlayed > 0
-      ? (player.wins / player.matchesPlayed) * 100
-      : 0;
-
-  const ratingPercentage = (player.rating / 5) * 100;
-
   return (
     <button
       type="button"
       className={`pixel-player-card ${
-        player.isCurrentUser ? "current-player" : ""
-      } ${selected ? "selected-player" : ""}`}
+        selected ? "selected-player" : ""
+      }`}
       onClick={onClick}
       aria-pressed={selected}
     >
@@ -89,59 +46,45 @@ function PlayerCard({ player, rank, selected, onClick }) {
             #{String(rank).padStart(2, "0")}
           </span>
 
-          {player.isCurrentUser && (
-            <span className="you-label">YOU</span>
-          )}
+          <span className="you-label">
+            {player.role === "owner" ? "HOST" : "MEMBER"}
+          </span>
         </div>
 
-        <h3 className="pixel-player-name">{player.username}</h3>
+        <h3 className="pixel-player-name">
+          {player.username}
+        </h3>
 
         <div className="player-metrics">
-          {/* TOTAL POINTS */}
-          <div className="player-metric points-metric">
+          <div className="player-metric">
             <div className="metric-heading">
-              <span>TOTAL POINTS</span>
+              <span>ROOM ROLE</span>
               <strong>
-                {player.totalPoints.toLocaleString("en-IN")}
+                {player.role.toUpperCase()}
               </strong>
             </div>
           </div>
 
-          {/* WINS */}
           <div className="player-metric">
             <div className="metric-heading">
-              <span>WINS</span>
-              <strong>{player.wins}</strong>
+              <span>MEMBER SINCE</span>
+              <strong>
+                {player.joinedAt
+                  ? new Date(player.joinedAt).toLocaleDateString()
+                  : "N/A"}
+              </strong>
             </div>
-
-            <PixelProgressBar percentage={winRate} />
-          </div>
-
-          {/* MATCHES PLAYED */}
-          <div className="player-metric matches-metric">
-            <div className="metric-heading">
-              <span>MATCHES PLAYED</span>
-              <strong>{player.matchesPlayed}</strong>
-            </div>
-          </div>
-
-          {/* RATING */}
-          <div className="player-metric">
-            <div className="metric-heading">
-              <span>RATING</span>
-              <strong>{player.rating.toFixed(1)} / 5</strong>
-            </div>
-
-            <PixelProgressBar percentage={ratingPercentage} />
           </div>
         </div>
 
-        <span className="pixel-player-id">ID: {player.id}</span>
+        <span className="pixel-player-id">
+          ID: {String(player.userId)}
+        </span>
       </div>
 
       <div className="pixel-player-avatar">
         <img
-          src={player.avatar}
+          src="/assets/avatars/default.png"
           alt={`${player.username} avatar`}
           onError={(event) => {
             event.currentTarget.style.display = "none";
@@ -151,7 +94,7 @@ function PlayerCard({ player, rank, selected, onClick }) {
         />
 
         <span className="avatar-fallback">
-          {player.username.charAt(0)}
+          {player.username.charAt(0).toUpperCase()}
         </span>
       </div>
 
@@ -160,19 +103,92 @@ function PlayerCard({ player, rank, selected, onClick }) {
   );
 }
 
-export default function PrivateRoomDashboard() {
-  const { roomCode: routeRoomCode } = useParams();
 
-  const [selectedPlayer, setSelectedPlayer] = useState("HRS102");
+export default function PrivateRoomDashboard() {
+  const { roomId } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  // Temporary room code for frontend preview.
-  const roomCode = routeRoomCode || "HX7K29";
+  const [room, setRoom] = useState(null);
+  const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Sort players by total points, highest first.
-  const players = [...initialPlayers].sort(
-    (a, b) => b.totalPoints - a.totalPoints
-  );
+  const roomCode = room?.roomCode || "LOADING...";
+
+
+  useEffect(() => {
+    const fetchRoomDetails = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await api.get(`/rooms/${roomId}`);
+
+        if (response.data.success) {
+          const roomData = response.data.data;
+
+          setRoom(roomData);
+          setPlayers(roomData.members || []);
+        }
+      } catch (err) {
+        console.error("Fetch room details error:", err);
+
+        setError(
+          err.response?.data?.message ||
+          "Unable to load room details."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (roomId) {
+      fetchRoomDetails();
+    }
+
+  }, [roomId]);
+
+  useEffect(() => {
+    if (!roomId) return;
+
+    const joinSocketRoom = () => {
+      socket.emit("room:join", { roomId }, (response) => {
+        if (response?.success) {
+          setPlayers(response.members || []);
+        } else {
+          console.error(
+            "Unable to join Socket.IO room:",
+            response?.message
+          );
+        }
+      });
+    };
+
+    const handleRoomMembers = (data) => {
+      if (String(data.roomId) === String(roomId)) {
+        setPlayers(data.members || []);
+      }
+    };
+
+    socket.on("connect", joinSocketRoom);
+    socket.on("room:members", handleRoomMembers);
+
+    if (socket.connected) {
+      joinSocketRoom();
+    } else {
+      socket.connect();
+    }
+
+    return () => {
+      socket.off("connect", joinSocketRoom);
+      socket.off("room:members", handleRoomMembers);
+      socket.emit("room:leave", { roomId });
+    };
+    }, [roomId]);
 
   const handleCopyRoomCode = async () => {
     try {
@@ -187,10 +203,52 @@ export default function PrivateRoomDashboard() {
     }
   };
 
-  const handleStartGame = () => {
-    // Replace this with your actual game-start API later.
-    alert("Game starting soon! Backend integration is pending.");
+  const [startingMatch, setStartingMatch] = useState(false);
+
+  const handleStartGame = async () => {
+    if (startingMatch) return;
+  
+    setStartingMatch(true);
+    setError("");
+  
+    try {
+      const response = await api.post(`/rooms/${roomId}/start`);
+    
+      if (response.data.success) {
+        const matchId = response.data.data.matchId;
+      
+        navigate(`/arena?roomId=${roomId}&matchId=${matchId}`);
+      }
+    } catch (err) {
+      console.error("Start match error:", err);
+    
+      setError(
+        err.response?.data?.message ||
+        "Unable to start the match."
+      );
+    } finally {
+      setStartingMatch(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="private-dashboard-page">
+        <h2>LOADING YOUR ARENA...</h2>
+        <p>Please wait while we retrieve your room details.</p>
+      </div>
+    );
+  }
+
+  if (error || !room) {
+    return (
+      <div className="private-dashboard-page">
+        <h2>UNABLE TO LOAD ARENA</h2>
+        <p>{error || "Room details could not be found."}</p>
+        <Link to="/private-room">BACK TO PRIVATE ROOMS</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="private-dashboard-page">
@@ -216,7 +274,7 @@ export default function PrivateRoomDashboard() {
           </button>
 
           <div className="private-player-count">
-            <span>{players.length} / 4 PLAYERS</span>
+            <span>{players.length} / {room?.maxPlayers || 0} PLAYERS</span>
           </div>
 
           <Link to="/login" className="private-profile-link">
@@ -239,14 +297,14 @@ export default function PrivateRoomDashboard() {
 
           <div className="dashboard-title-row">
             <div>
-              <h1>THE ARENA IS READY.</h1>
+              <h1>{room?.roomName || "THE ARENA IS READY."}</h1>
               <p>
-                Permanent private room · 4 player capacity
+                Permanent private room · {room?.maxPlayers} player capacity
               </p>
             </div>
 
             <span className="dashboard-player-badge">
-              {players.length} / 4 PLAYERS
+              {players.length} / {room?.maxPlayers || 0} PLAYERS
             </span>
           </div>
 
@@ -276,11 +334,11 @@ export default function PrivateRoomDashboard() {
             <div className="pixel-player-grid">
               {players.map((player, index) => (
                 <PlayerCard
-                  key={player.id}
+                  key={player.userId}
                   player={player}
                   rank={index + 1}
-                  selected={selectedPlayer === player.id}
-                  onClick={() => setSelectedPlayer(player.id)}
+                  selected={selectedPlayer === String(player.userId)}
+                  onClick={() => setSelectedPlayer(String(player.userId))}
                 />
               ))}
             </div>
@@ -297,7 +355,7 @@ export default function PrivateRoomDashboard() {
             </p>
 
             <div className="match-detail-item">
-              <h3>MEDIUM</h3>
+              <h3>{room?.difficulty?.toUpperCase() || "LOADING..."}</h3>
               <p>Difficulty level</p>
             </div>
 
@@ -307,7 +365,7 @@ export default function PrivateRoomDashboard() {
             </div>
 
             <div className="match-detail-item">
-              <h3>4 PLAYERS</h3>
+              <h3>{room?.maxPlayers || 0} PLAYERS</h3>
               <p>Maximum room capacity</p>
             </div>
 

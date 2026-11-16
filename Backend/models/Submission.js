@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+
+import mongoose from "mongoose";
 
 const submissionSchema = new mongoose.Schema({
 
@@ -24,6 +25,14 @@ const submissionSchema = new mongoose.Schema({
     required: true
   },
 
+  // Submission evaluation lifecycle
+  executionStatus: {
+    type: String,
+    enum: ["queued", "running", "completed", "failed"],
+    default: "queued"
+  },
+
+  // Final verdict
   verdict: {
     type: String,
     enum: [
@@ -32,16 +41,47 @@ const submissionSchema = new mongoose.Schema({
       "wrong-answer",
       "runtime-error",
       "compilation-error",
-      "time-limit-exceeded"
+      "time-limit-exceeded",
+      "memory-limit-exceeded",
+      "internal-error"
     ],
     default: "pending"
   },
 
-  passedTests: Number,
+  passedTests: {
+    type: Number,
+    default: 0
+  },
 
-  totalTests: Number,
+  totalTests: {
+    type: Number,
+    default: 0
+  },
 
-  executionTime: Number,
+  visibleTestsPassed: {
+    type: Number,
+    default: 0
+  },
+
+  hiddenTestsPassed: {
+    type: Number,
+    default: 0
+  },
+
+  baseScore: {
+    type: Number,
+    default: 0
+  },
+
+  executionTime: {
+    type: Number,
+    default: 0
+  },
+
+  executionMemory: {
+    type: Number,
+    default: 0
+  },
 
   submittedAt: {
     type: Date,
@@ -50,6 +90,10 @@ const submissionSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-submissionSchema.index({ match: 1, user: 1, submittedAt: -1 });
+submissionSchema.index({
+  match: 1,
+  user: 1,
+  submittedAt: -1
+});
 
 export default mongoose.model("Submission", submissionSchema);
