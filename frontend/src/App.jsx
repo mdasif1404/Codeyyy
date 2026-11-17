@@ -5,6 +5,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HowItWorks from "./pages/HowItWorks";
 import Dashboard from "./pages/Dashboard";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 import PrivateRoom from "./pages/PrivateRoom";
 import PrivateRoomDashboard from "./pages/PrivateRoomDashboard";
@@ -15,6 +17,9 @@ import RoomsPage from "./pages/RoomsPage";
 import GameStatsPage from "./pages/GameStatsPage";
 import Leaderboard from "./pages/Leaderboard";
 
+import { AuthProvider } from "./context/authContext";
+import ProtectedRoute from "./components/protectedRoute";
+
 // Coding Arena
 import CodingArena from "./pages/CodingArena/CodingArena";
 
@@ -22,20 +27,25 @@ import IntroAnimation from "./components/IntroAnimation";
 
 function App() {
   return (
-    <>
-      {/* Website opening animation */}
-      <IntroAnimation />
+    <AuthProvider>
+      <>
+        <IntroAnimation />
 
-      {/* Website pages */}
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Routes>
+          {/* Public pages */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
 
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
+          {/* Protected pages */}
+          <Route element={<ProtectedRoute />}/>
+            <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Main dashboard */}
-        <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/private-room" element={<PrivateRoom />} />
 
         {/* Profile page */}
         <Route path="/profile" element={<ProfilePage />} />
@@ -46,11 +56,10 @@ function App() {
         {/* Permanent private room */}
         <Route path="/private-room" element={<PrivateRoom />} />
 
-        {/* Private room dashboard */}
-        <Route
-          path="/private-room-dashboard"
-          element={<PrivateRoomDashboard />}
-        />
+            <Route
+              path="/private-room-dashboard/:roomId"
+              element={<PrivateRoomDashboard />}
+            />
 
         <Route path="/leaderboard" element={<Leaderboard />} />
 
@@ -70,6 +79,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
       </Routes>
     </>
+    </AuthProvider>
   );
 }
 

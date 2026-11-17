@@ -4,3 +4,6 @@ node_modules/
 !.env.example
 dist/
 build/
+judge0/
+judge0/Passwords_of_postgresql.txt
+/Codeyyy/

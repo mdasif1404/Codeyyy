@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../services/api";
 import "../styles/privateRoom.css";
 
 function PrivateRoom() {
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState("create");
 
   const [roomName, setRoomName] = useState("");
@@ -13,19 +16,78 @@ function PrivateRoom() {
   const [roomCode, setRoomCode] = useState("");
   const [joinPassword, setJoinPassword] = useState("");
 
-  const handleCreateRoom = (e) => {
-    e.preventDefault();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-    // Backend integration will generate and save the real room code.
-    alert("Create Room UI is ready. Backend integration is the next step.");
+  
+  const handleCreateRoom = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      const response = await api.post("/rooms", {
+        roomName: roomName.trim(),
+        password,
+        difficulty,
+        maxPlayers: Number(participants)
+      });
+
+      if (response.data.success) {
+        const data = response.data.data;
+
+        setRoomCode(data.roomCode);
+        setSuccess("Permanent room created successfully!");
+
+        navigate(`/private-room-dashboard/${data.roomId}`);
+      }
+    } catch (err) {
+      console.error("Create room error:", err);
+      setError(
+        err.response?.data?.message || "Unable to create room."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleJoinRoom = (e) => {
+  const handleJoinRoom = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
-    // Backend integration will validate the room code and password.
-    alert("Join Room UI is ready. Backend integration is the next step.");
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      const response = await api.post("/rooms/join", {
+        roomCode: roomCode.trim().toUpperCase(),
+        password: joinPassword
+      });
+
+      if (response.data.success) {
+        const data = response.data.data;
+
+        setSuccess("Joined room successfully!");
+
+        navigate(`/private-room-dashboard/${data.roomId}`);
+      }
+    } catch (err) {
+      console.error("Join room error:", err);
+      setError(
+        err.response?.data?.message || "Unable to join room."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <div className="private-room-page">
@@ -88,6 +150,18 @@ function PrivateRoom() {
             <span>↗</span> JOIN ROOM
           </button>
         </div>
+
+        {error && (
+          <div className="room-error-message">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="room-success-message">
+            {success}
+          </div>
+        )}
 
         {/* CREATE ROOM */}
         {activeTab === "create" && (
@@ -168,8 +242,9 @@ function PrivateRoom() {
                 <small>At least 6 characters. Share it only with your team.</small>
               </div>
 
-              <button type="submit" className="create-room-button">
-                CREATE ROOM <span>→</span>
+              <button type="submit" className="create-room-button" disabled={loading}>
+                {loading ? "CREATING ROOM..." : "CREATE ROOM"}
+                {!loading && <span>→</span>}
               </button>
             </form>
 
@@ -278,8 +353,13 @@ function PrivateRoom() {
                 />
               </div>
 
-              <button type="submit" className="create-room-button">
-                JOIN ROOM <span>→</span>
+              <button
+                type="submit"
+                className="create-room-button"
+                disabled={loading}
+              >
+                {loading ? "JOINING ROOM..." : "JOIN ROOM"}
+                {!loading && <span>→</span>}
               </button>
             </form>
 

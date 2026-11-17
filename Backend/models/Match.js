@@ -35,6 +35,31 @@ const matchSchema = new mongoose.Schema({
       default: false
     },
 
+    visibleTestsPassed: {
+      type: Number,
+      default: 0
+    },
+
+    hiddenTestsPassed: {
+      type: Number,
+      default: 0
+    },
+
+    baseScore: {
+      type: Number,
+      default: 0
+    },
+
+    solved: {
+      type: Boolean,
+      default: false
+    },
+
+    firstSolvedAt: {
+      type: Date,
+      default: null
+    },
+
     executionTime: Number
   }],
 
@@ -52,7 +77,20 @@ const matchSchema = new mongoose.Schema({
 
   startedAt: Date,
 
+  endsAt: {
+    type: Date,
+    required: true
+  },
+
   completedAt: Date,
+
+  resultsExpireAt: Date,
+
+  cleanupStatus: {
+    type: String,
+    enum: ["pending", "completed"],
+    default: null
+  },
 
   duration: Number
 
@@ -60,5 +98,6 @@ const matchSchema = new mongoose.Schema({
 
 matchSchema.index({ room: 1, completedAt: -1 });
 matchSchema.index({ "participants.user": 1, completedAt: -1 });
+matchSchema.index({ status: 1, endsAt: 1 });
 
 export default mongoose.model("Match", matchSchema);

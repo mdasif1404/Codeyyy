@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import api from "../services/api";
 import AuthLayout from "../components/AuthLayout";
+import { useAuth } from "../context/authContext";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,6 +14,7 @@ function LoginPage() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,18 +23,16 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await api.post("/auth/login", {
+      const response = await login({
         email: email.trim().toLowerCase(),
         password
       });
 
-      if (response.data.success) {
-        console.log("Logged-in user:", response.data.user);
+      if (response.success) {
+        console.log("Logged-in user:", response.user);
         navigate("/dashboard");
       } else {
-        setError(
-          response.data.message || "Login failed. Please try again."
-        );
+        setError(response.message || "Login failed. Please try again.");
       }
     } catch (err) {
       console.error("Login error:", err);

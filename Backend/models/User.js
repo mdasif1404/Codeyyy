@@ -7,8 +7,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
+    lowercase: true,
     minlength: 3,
-    maxlength: 20
+    maxlength: 20,
+    match: /^[a-z0-9_]+$/
   },
 
   email: {
@@ -16,8 +18,38 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
-    trim: true
+    trim: true,
+    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   },
+
+  
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  
+  emailVerificationOTP: {
+    type: String,
+    select: false
+  },
+  
+  emailVerificationExpires: {
+    type: Date,
+    select: false
+  },
+  
+  otpAttempts: {
+    type: Number,
+    default: 0,
+    select: false
+  },
+  
+  otpLastSentAt: {
+    type: Date,
+    default: null,
+    select: false
+  },
+
 
   password: {
     type: String,
@@ -59,9 +91,32 @@ const userSchema = new mongoose.Schema({
     }
   },
 
+    // Password reset fields
+  resetPasswordToken: {
+    type: String,
+    select: false
+  },
+
+  resetPasswordExpires: {
+    type: Date,
+    select: false
+  },
+
+  resetPasswordRequestedAt: {
+    type: Date,
+    default: null,
+    select: false
+  },
+
   isActive: {
-    type: Boolean,
-    default: true
+  type: Boolean,
+  default: true
+  },
+  
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user"
   }
 
 }, { timestamps: true });
