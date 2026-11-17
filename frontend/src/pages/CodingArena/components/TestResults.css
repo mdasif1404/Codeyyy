@@ -1,0 +1,309 @@
+/* =========================================
+   USB TEST RESULTS - IMPROVED LAYOUT
+========================================= */
+
+.usb-results {
+  position: relative;
+  width: min(520px, 48vw);
+  max-width: none;
+  aspect-ratio: 1829 / 860;
+  margin: -100px 0 10px -5px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.usb-results-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* RED BODY CONTENT AREA */
+
+.usb-results-content {
+  position: absolute;
+  z-index: 1;
+
+  left: 6%;
+  top: 9%;
+  width: 59%;
+  height: 82%;
+
+  box-sizing: border-box;
+  padding: 3% 3.5%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+
+  color: #fff4df;
+  font-family: "DM Sans", sans-serif;
+  overflow: hidden;
+}
+
+/* HEADER */
+
+.usb-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.usb-results-kicker {
+  color: #fff4df;
+  font-family: "Silkscreen", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.usb-results-live-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #39db8a;
+  box-shadow: 0 0 10px #39db8a;
+}
+
+/* SCORE */
+
+.usb-results-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.usb-results-score {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  color: #fff4df;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.usb-results-score strong {
+  color: #ffd83d;
+}
+
+.usb-results-score-label {
+  color: #fff4df;
+  font-family: "Silkscreen", monospace;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+/* STATUS */
+
+.usb-results-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.usb-results-status span {
+  padding: 5px 7px;
+  border: 1px solid #ffd83d;
+  border-radius: 4px;
+  color: #fff0bd;
+  background: rgba(35, 5, 9, 0.9);
+  font-family: "Silkscreen", monospace;
+  font-size: 8px;
+}
+
+.usb-results-status span.failed {
+  color: white;
+  border-color: #ff5965;
+  background: #761421;
+}
+
+/* PROGRESS */
+
+.usb-results-progress {
+  width: 100%;
+  height: 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #240c11;
+  border: 1px solid #ffd83d;
+  border-radius: 4px;
+}
+
+.usb-results-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #39db8a, #b7f56c);
+  transition: width 0.35s ease;
+}
+
+/* TEST CASES */
+
+.usb-test-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.usb-test-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  color: #fff4df;
+  background: transparent;
+  border: 0;
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.usb-test-item:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.usb-test-checkbox {
+  width: 17px;
+  height: 17px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid #fff0d7;
+  border-radius: 4px;
+  color: #39db8a;
+  background: rgba(25, 5, 8, 0.85);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.usb-test-item.passed .usb-test-checkbox {
+  background: #123d29;
+  border-color: #39db8a;
+}
+
+.usb-test-item.failed .usb-test-checkbox {
+  color: white;
+  background: #9c1d2a;
+  border-color: #ff5965;
+}
+
+/* EXECUTION DETAILS */
+
+.usb-results-message {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 10px;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  background: rgba(30, 5, 9, 0.95);
+  border: 1px solid rgba(255, 216, 61, 0.65);
+  border-left: 4px solid #ffd83d;
+  border-radius: 4px;
+}
+
+.usb-message-label {
+  color: #ffd83d;
+  font-family: "Silkscreen", monospace;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+}
+
+.usb-results-message p {
+  margin: 5px 0 0;
+  color: #fff4df;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .usb-results {
+    width: min(520px, 85vw);
+    margin: 0 auto 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .usb-results {
+    width: 100%;
+    margin: 0 auto 12px;
+  }
+
+  .usb-results-content {
+    gap: 4px;
+  }
+
+  .usb-results-score {
+    font-size: 25px;
+  }
+
+  .usb-results-kicker {
+    font-size: 8px;
+  }
+
+  .usb-test-item {
+    font-size: 8px;
+    gap: 3px;
+  }
+
+  .usb-test-checkbox {
+    width: 12px;
+    height: 12px;
+  }
+
+  .usb-results-message p {
+    font-size: 8px;
+  }
+}
+
+/* =========================================
+   ERROR BUG INDICATOR
+========================================= */
+
+.usb-results-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.usb-bug-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ff303f;
+  filter: drop-shadow(0 0 5px rgba(255, 35, 55, 0.9));
+
+  animation: bugAlert 1.2s ease-in-out infinite;
+}
+
+.usb-results-live-dot.error-dot {
+  background: #ff303f;
+  box-shadow: 0 0 10px #ff303f;
+}
+
+@keyframes bugAlert {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}

@@ -1,56 +1,355 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 
-/* MAIN ARENA LAYOUT */
+/* USB TEST RESULTS POSITION */
+
+.arena-workspace > .usb-results {
+  grid-column: 1;
+  grid-row: 2;
+
+  justify-self: start;
+  align-self: start;
+
+  width: 100%;
+  max-width: 760px;
+  min-width: 0;
+
+  margin-top: -28px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 900px) {
+  .arena-workspace > .usb-results {
+    grid-column: 1;
+    grid-row: auto;
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+/* =================================
+   MAIN CODING ARENA
+================================= */
 
 .coding-arena {
   min-height: 100vh;
-  background: #f7f7f7;
-  color: #210c10;
+  background: #10090b;
+  color: #fff0d7;
   padding-bottom: 40px;
   font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
+
+/* =================================
+   ARENA NAVBAR
+================================= */
+
+.arena-navbar {
+  position: relative;
+  z-index: 5;
+
+  width: 100%;
+  min-height: 90px;
+  padding: 12px 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  background: rgba(12, 5, 8, 0.96);
+  border-bottom: 1px solid rgba(233, 191, 50, 0.2);
+
+  box-sizing: border-box;
+}
+
+/* ORIGINAL CODYyy LOGO */
+
+.arena-brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.arena-logo-image {
+  display: block;
+  width: 190px;
+  max-height: 65px;
+  object-fit: contain;
+}
+
+/* RIGHT SIDE */
+
+.arena-navbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 22px;
+}
+
+/* =================================
+   RETRO ARCADE ROOM CODE
+================================= */
+
+.arena-room-code-card {
+  position: relative;
+  min-width: 155px;
+  padding: 9px 13px;
+
+  background: linear-gradient(
+    135deg,
+    #29144c,
+    #171027
+  );
+
+  border: 2px solid #6546a8;
+  border-radius: 7px;
+
+  box-shadow:
+    0 0 0 2px #080610,
+    0 0 12px rgba(112, 75, 190, 0.3);
+
+  text-align: center;
+}
+
+.arena-room-code-label {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #c1a8ff;
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.arena-room-code-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+}
+
+.arena-room-code-content strong {
+  color: #ffd83d;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+/* SMALL COPY ICON */
+
+.arena-copy-icon {
+  width: 25px;
+  height: 25px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #402568;
+  color: #ffffff;
+
+  border: 1px solid #a38ae2;
+  border-radius: 4px;
+
+  font-size: 17px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.arena-copy-icon:hover {
+  color: #171027;
+  background: #ffd83d;
+  border-color: #ffd83d;
+  transform: scale(1.08);
+}
+
+.arena-copied-message {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+
+  color: #50ed83;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* =================================
+   PLAYER COUNT
+================================= */
+
+.arena-player-count {
+  padding: 8px 11px;
+
+  background: rgba(33, 229, 139, 0.08);
+  border: 1px solid rgba(33, 229, 139, 0.35);
+  border-radius: 20px;
+
+  color: #50ed83;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* =================================
+   PROFILE EYE VIDEO
+================================= */
+
+.arena-profile-btn {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  background: #090909;
+  border: 2px solid #e9bf32;
+  border-radius: 50%;
+
+  overflow: hidden;
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.arena-profile-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 12px rgba(233, 191, 50, 0.5);
+}
+
+.arena-profile-btn video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =================================
+   VIDEO BACKGROUND AREA
+================================= */
+
+.arena-main {
+  position: relative;
+  min-height: calc(100vh - 90px);
+  overflow: hidden;
+  isolation: isolate;
+  background: #10090b;
+}
+
+/* BACKGROUND VIDEO */
+
+.arena-background-video {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  z-index: -2;
+
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* DARK OVERLAY */
+
+.arena-video-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(12, 5, 8, 0.62);
+
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* CONTENT ABOVE VIDEO */
+
+.arena-content {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  min-height: inherit;
+
+  padding-bottom: 30px;
+  box-sizing: border-box;
+}
+
+/* =================================
+   ARENA HEADING
+================================= */
 
 .arena-heading {
   text-align: center;
-  padding: 24px 15px;
+  padding: 30px 15px;
 }
 
 .arena-heading h1 {
   margin: 0;
+  color: #fff0d7;
+
   font-size: 34px;
   font-weight: 800;
+  letter-spacing: 1px;
 }
 
 .arena-heading p {
   margin-top: 10px;
-  color: #b8860b;
-  font-weight: 600;
+  color: #e9bf32;
+  font-weight: 700;
 }
+
+/* =================================
+   MAIN WORKSPACE
+================================= */
 
 .arena-workspace {
   display: grid;
-  grid-template-columns: 40% 60%;
-  gap: 20px;
+  grid-template-columns: minmax(0, 470px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+
   padding: 10px 24px;
   max-width: 1600px;
   margin: auto;
+  box-sizing: border-box;
 }
 
-.problem-panel,
+/* =================================
+   EDITOR PANEL (UPDATED FOR MONACO)
+================================= */
+
 .editor-panel {
-  background: #210c10;
-  color: #fff0d7;
-  border: 2px solid #4a1620;
-  border-radius: 8px;
-  min-height: 500px;
-  overflow: hidden;
+  min-width: 0;
+  height: auto;
+  overflow: visible;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
+
+/* PANEL HEADER */
 
 .panel-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   padding: 16px;
-  background: #3b1118;
+
+  background: rgba(59, 17, 24, 0.95);
   border-bottom: 2px solid #e9bf32;
 }
 
@@ -65,198 +364,515 @@
   font-size: 13px;
 }
 
-.panel-content {
-  padding: 22px;
-  line-height: 1.7;
+/* =========================================
+   ANIMATED ROOM NAME - NEON ARCADE EFFECT
+========================================= */
+
+.arena-room-name-container {
+  margin: 22px auto 0;
+  width: fit-content;
+  max-width: 90%;
+  text-align: center;
 }
 
-.panel-content h3 {
-  color: #e9bf32;
-  font-size: 24px;
+.room-name-caption {
+  display: block;
+  margin-bottom: 9px;
+
+  color: #ffd83d;
+  font-family: "Silkscreen", monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
 }
 
-.panel-content h4 {
-  color: #e9bf32;
-  margin-top: 24px;
+/* MAIN NEON TEXT */
+
+.arena-room-name {
+  position: relative;
+  margin: 0;
+  padding: 5px 12px;
+
+  color: #fff6d8;
+  font-family: "Righteous", sans-serif;
+  font-size: clamp(30px, 5vw, 58px);
+  font-weight: 900;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+
+  overflow-wrap: anywhere;
+
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px #fff0a0,
+    0 0 15px #ffb000,
+    0 0 25px #ff5a00,
+    0 0 38px #a000ff;
+
+  animation: roomNeonFlicker 3s infinite;
 }
 
-.panel-content pre {
-  padding: 14px;
-  background: #101116;
-  border-radius: 6px;
+/* HORIZONTAL LIGHT STREAK */
+
+.arena-room-name::after {
+  content: "";
+  display: block;
+
+  width: 65%;
+  height: 3px;
+  margin: 8px auto 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #ff5a00,
+    #fff2a6,
+    #ff5a00,
+    transparent
+  );
+
+  box-shadow:
+    0 0 8px #ff6a00,
+    0 0 16px #a000ff;
+
+  animation: roomLightPulse 2s ease-in-out infinite;
+}
+
+/* NEON FLICKER */
+
+@keyframes roomNeonFlicker {
+  0%, 18%, 20%, 22%, 55%, 57%, 100% {
+    opacity: 1;
+
+    text-shadow:
+      0 0 3px #fff,
+      0 0 8px #fff0a0,
+      0 0 15px #ffb000,
+      0 0 25px #ff5a00,
+      0 0 38px #a000ff;
+  }
+
+  19%, 21%, 56% {
+    opacity: 0.72;
+
+    text-shadow:
+      0 0 3px #ffcf70,
+      0 0 8px #ff5a00,
+      0 0 17px #8b00ff;
+  }
+
+  70% {
+    opacity: 0.95;
+  }
+}
+
+/* LIGHT STREAK PULSE */
+
+@keyframes roomLightPulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scaleX(0.75);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* ROUND LABEL */
+
+.arena-round-label {
+  margin-top: 12px;
+
+  color: #ffd83d;
+  font-family: "Silkscreen", monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+
+/* =========================================
+   POKEDEX DEVICE - COMPACT LAYOUT
+========================================= */
+
+.problem-panel {
+  position: relative;
+  isolation: isolate;
+
+  width: 100%;
+  max-width: 470px;
+  aspect-ratio: 468 / 680;
+  height: auto;
+  min-height: 0;
+
+  margin: 0 auto;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+
+  background: transparent;
+  box-shadow: none;
+}
+
+.problem-bg-video {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: fill;
+  object-position: center;
+
+  opacity: 1;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* =========================================
+   WHITE SCREEN AREA
+========================================= */
+
+.problem-screen {
+  position: absolute;
+  top: 17.8%;
+  left: 7.5%;
+
+  width: 85%;
+  height: 56.5%;
+
+  box-sizing: border-box;
+  padding: 15px 13px;
+
+  background: rgba(255, 255, 255, 0.96);
+  color: #242424;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 2;
+}
+
+.problem-screen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+  padding-bottom: 9px;
+  margin-bottom: 12px;
+
+  border-bottom: 2px solid #e63b32;
+  color: #252525;
+
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.problem-screen-content {
+  color: #252525;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.problem-screen-content h3 {
+  margin: 0 0 10px;
+  color: #d92d2d;
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.problem-screen-content p {
+  margin: 7px 0 12px;
+  color: #292929;
+}
+
+.problem-screen-content h4 {
+  margin: 13px 0 6px;
+  color: #bd2929;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.problem-screen-content pre {
+  margin: 0;
+  padding: 9px;
+
+  background: #f0f0f0;
+  border: 1px solid #d7d7d7;
+  border-left: 3px solid #e43b32;
+  border-radius: 4px;
+
+  color: #242424;
+  font-size: 10px;
+  line-height: 1.6;
+
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.editor-placeholder {
-  min-height: 390px;
-  display: grid;
-  place-items: center;
-  background: #101116;
-  color: #b9a49b;
-}
-
-.editor-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 16px;
-}
-
-.editor-actions button {
-  padding: 12px 22px;
-  border-radius: 5px;
-  font-weight: bold;
-  border: 2px solid #e9bf32;
-}
-
-.run-btn {
-  background: #210c10;
-  color: #fff0d7;
-}
-
-.submit-btn {
-  background: #ed2435;
-  color: white;
-}
-
-.editor-actions button:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
+/* =================================
+   RESPONSIVE DESIGN
+================================= */
 
 @media (max-width: 900px) {
   .arena-workspace {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .problem-panel {
+    width: min(100%, 430px);
+  }
+
+  .editor-panel {
+    width: 100%;
   }
 }
-
-
-/* =================================
-   CODING ARENA NAVBAR
-================================= */
-
-.arena-navbar {
-  width: calc(100% - 36px);
-  min-height: 66px;
-  margin: 18px auto 0;
-  padding: 12px 24px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-
-  background: #210c10;
-  color: #fff0d7;
-
-  border: 2px solid #4a1620;
-  border-radius: 12px;
-  box-sizing: border-box;
-}
-
-/* BRAND */
-
-.arena-brand {
-  display: flex;
-  align-items: center;
-}
-
-.brand-text {
-  color: #e9bf32;
-  font-size: 28px;
-  font-weight: 900;
-  letter-spacing: 1px;
-}
-
-/* ROOM CODE */
-
-.arena-room {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.arena-room strong {
-  color: #e9bf32;
-  letter-spacing: 1px;
-}
-
-.copy-room-btn {
-  padding: 6px 13px;
-
-  background: transparent;
-  color: #e9bf32;
-
-  border: 1px solid #a77e21;
-  border-radius: 5px;
-
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.copy-room-btn:hover {
-  background: #e9bf32;
-  color: #210c10;
-}
-
-/* RIGHT SIDE */
-
-.arena-navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.connection-indicator {
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-
-  background: #20df83;
-  border-radius: 50%;
-
-  box-shadow: 0 0 8px #20df83;
-}
-
-.connection-text {
-  color: #20df83;
-}
-
-.navbar-players {
-  margin-left: 12px;
-  color: #e9bf32;
-}
-
-/* RESPONSIVE */
 
 @media (max-width: 650px) {
   .arena-navbar {
+    min-height: 75px;
+    padding: 10px 14px;
     flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 12px;
   }
 
-  .brand-text {
-    font-size: 22px;
-  }
-
-  .arena-room {
-    order: 3;
-    width: 100%;
-    justify-content: center;
+  .arena-logo-image {
+    width: 135px;
+    max-height: 48px;
   }
 
   .arena-navbar-right {
-    gap: 7px;
+    gap: 9px;
+  }
+
+  .arena-room-code-card {
+    min-width: 120px;
+    padding: 7px 9px;
+  }
+
+  .arena-room-code-content strong {
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  .arena-room-code-label {
+    font-size: 7px;
+  }
+
+  .arena-player-count {
+    padding: 7px 8px;
+    font-size: 8px;
+  }
+
+  .arena-profile-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .arena-heading h1 {
+    font-size: 26px;
+  }
+
+  .arena-workspace {
+    padding: 10px;
+    gap: 14px;
+  }
+
+  .arena-room-name {
+    font-size: 30px;
+    letter-spacing: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .problem-screen {
+    padding: 10px 9px;
+  }
+
+  .problem-screen-header {
+    font-size: 9px;
+    margin-bottom: 8px;
+  }
+
+  .problem-screen-content h3 {
+    font-size: 17px;
+  }
+
+  .problem-screen-content {
+    font-size: 10px;
+  }
+
+  .problem-screen-content h4 {
     font-size: 11px;
+    margin-top: 9px;
+  }
+
+  .problem-screen-content pre {
+    font-size: 8px;
+    padding: 6px;
+  }
+}
+
+/* ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+  .arena-room-name,
+  .arena-room-name::after {
+    animation: none;
+  }
+}
+
+.arena-bottom-widgets {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 22px;
+  margin-top: 18px;
+}
+
+.arena-usb-area,
+.arena-player-area {
+  min-width: 0;
+  width: 100%;
+}
+
+.arena-player-area {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 850px) {
+  .arena-bottom-widgets {
+    grid-template-columns: 1fr;
+  }
+
+  .arena-player-area {
+    justify-content: flex-start;
+  }
+}
+
+/* =========================================
+   ROOM TITLE + VIDEO FOCUS TIMER
+========================================= */
+
+.room-title-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 5px 24px;
+  box-sizing: border-box;
+}
+
+/* Keep room title aligned left */
+.room-title-row .arena-room-name {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+/* TIMER VIDEO PANEL */
+.arena-focus-timer {
+  position: relative;
+  width: 295px;
+  height: 145px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 190, 45, 0.45);
+  border-radius: 15px;
+  background: #16090b;
+  box-shadow:
+    0 0 15px rgba(255, 65, 35, 0.15),
+    inset 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+/* VIDEO BACKGROUND */
+.arena-timer-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.85;
+  z-index: 0;
+}
+
+/* DARK TRANSPARENT LAYER */
+.arena-timer-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 12px;
+  box-sizing: border-box;
+
+  background: linear-gradient(
+    180deg,
+    rgba(12, 4, 7, 0.45),
+    rgba(12, 4, 7, 0.18),
+    rgba(12, 4, 7, 0.55)
+  );
+}
+
+/* TIMER LABEL */
+.arena-timer-label {
+  color: #ffd83d;
+  font-family: "Silkscreen", monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+
+/* DIGITAL COUNTDOWN */
+.arena-timer-time {
+  color: #fff0d7;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: 5px;
+  line-height: 1;
+
+  text-shadow:
+    0 0 5px rgba(255, 255, 255, 0.8),
+    0 0 15px rgba(255, 175, 55, 0.9),
+    0 0 25px rgba(255, 65, 25, 0.5);
+}
+
+/* TIMER STATUS */
+.arena-timer-status {
+  color: rgba(255, 240, 215, 0.85);
+  font-family: "Silkscreen", monospace;
+  font-size: 7px;
+  letter-spacing: 2px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .room-title-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .room-title-row .arena-room-name {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .arena-focus-timer {
+    width: min(100%, 295px);
+    height: 135px;
+  }
+
+  .arena-timer-time {
+    font-size: 42px;
   }
 }

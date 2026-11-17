@@ -58,24 +58,11 @@ function Dashboard() {
         {/* RIGHT: LEADERBOARD + PROFILE */}
         <nav className="dashboard-nav" aria-label="Dashboard navigation">
 
-          {/* PIXEL LEADERBOARD */}
-          <span className="leaderboard-link">
-            <svg
-              className="leaderboard-icon"
-              viewBox="0 0 32 32"
-              aria-hidden="true"
-            >
-              <path
-                d="M7 3V29M25 3V29M7 7H25M7 14H25M7 21H25M7 28H25"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="square"
-              />
-            </svg>
-
+          {/* PIXEL LEADERBOARD LINK */}
+          <Link to="/leaderboard" className="dashboard-leaderboard-link">
+            <span className="leaderboard-icon">▤</span>
             <span>LEADERBOARD</span>
-          </span>
+          </Link>
 
           {/* ANIMATED PROFILE VIDEO */}
           <Link

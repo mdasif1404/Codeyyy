@@ -1,0 +1,503 @@
+/* =========================================
+   CODYyy RETRO COMPUTER CODE EDITOR
+========================================= */
+
+.retro-editor {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  color: #fff0d7;
+  background: #10090b;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   COMPUTER BODY / FRAME
+========================================= */
+
+.retro-computer-frame {
+  position: relative;
+  width: 100%;
+  height: clamp(480px, 65vw, 700px);
+  min-height: 480px;
+  flex-shrink: 0;
+
+  background-image: url("/assets/computer-frame.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+/* =========================================
+   MONITOR SCREEN OPENING
+
+   The editor is positioned inside the
+   screen area of your computer image.
+========================================= */
+
+.retro-monitor-window {
+  position: absolute;
+
+  left: 11.7%;
+  top: 7.8%;
+  width: 76.7%;
+  height: 48.2%;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+  background: #10090b;
+
+  box-sizing: border-box;
+}
+
+/* =========================================
+   TOOLBAR INSIDE MONITOR
+========================================= */
+
+.retro-editor-toolbar {
+  min-height: 54px;
+  flex-shrink: 0;
+
+  padding: 7px 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  background: #210c10;
+  border-bottom: 2px dotted #8b5525;
+
+  box-sizing: border-box;
+}
+
+.retro-file-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 10px;
+
+  color: #fff0d7;
+  background: #160b0e;
+
+  border: 1px solid #76232b;
+  border-bottom: 2px solid #e9bf32;
+  border-radius: 5px 5px 0 0;
+
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+}
+
+.retro-file-icon {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  background: #ed2939;
+}
+
+/* =========================================
+   TOOLBAR CONTROLS
+========================================= */
+
+.retro-toolbar-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* LANGUAGE SELECTOR */
+
+.retro-language-select {
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+
+  background: #321018;
+  border: 2px solid #e9bf32;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.retro-language-symbol {
+  height: 100%;
+  min-width: 30px;
+
+  display: grid;
+  place-items: center;
+
+  color: #fff0d7;
+  background: #ed2939;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.retro-language-select select {
+  width: 90px;
+  height: 100%;
+  padding: 0 7px;
+
+  color: #fff0d7;
+  background: #321018;
+
+  border: 0;
+  outline: 0;
+
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.retro-language-select option {
+  color: #fff0d7;
+  background: #210c10;
+}
+
+/* FONT SIZE */
+
+.retro-font-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #fff0d7;
+  font-size: 11px;
+}
+
+.retro-font-controls button {
+  width: 30px;
+  height: 29px;
+
+  color: #fff0d7;
+  background: #210c10;
+
+  border: 1px solid #76232b;
+  border-radius: 4px;
+
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.retro-font-controls button:hover {
+  color: #210c10;
+  background: #e9bf32;
+}
+
+/* AUTO-SAVE STATUS */
+
+.retro-save-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #c9b6a8;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.save-dot {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  background: #e9bf32;
+}
+
+.save-dot.saved {
+  background: #39db8a;
+}
+
+/* =========================================
+   MONACO SCREEN
+========================================= */
+
+.retro-monitor-screen {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: #10090b;
+}
+
+.retro-monitor-screen > section,
+.retro-monitor-screen .monaco-editor,
+.retro-monitor-screen .overflow-guard {
+  width: 100% !important;
+}
+
+/* =========================================
+   CONSOLE BELOW COMPUTER
+========================================= */
+
+.retro-output-panel {
+  min-height: 76px;
+  max-height: 160px;
+
+  padding: 12px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  background: #210c10;
+
+  border: 2px solid #4d1922;
+  border-top: 2px solid #76232b;
+
+  box-sizing: border-box;
+}
+
+.retro-output-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  color: #210c10;
+  background: #e9bf32;
+
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.retro-output-content {
+  min-width: 0;
+  flex: 1;
+  overflow: auto;
+}
+
+.retro-output-content strong {
+  color: #e9bf32;
+  font-family: "Silkscreen", monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.retro-output-content pre {
+  margin: 5px 0 0;
+
+  color: #fff0d7;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.retro-output-panel.error {
+  border-left: 5px solid #ed2939;
+}
+
+.retro-output-panel.error .retro-output-icon {
+  color: white;
+  background: #ed2939;
+}
+
+.retro-output-panel.error strong {
+  color: #ff5a5a;
+}
+
+.retro-output-panel.success {
+  border-left: 5px solid #39db8a;
+}
+
+.retro-output-panel.success .retro-output-icon {
+  background: #39db8a;
+}
+
+.retro-output-panel.success strong {
+  color: #39db8a;
+}
+
+/* =========================================
+   BUTTONS POSITIONED ON THE LOWER COMPUTER BODY
+========================================= */
+
+.retro-computer-actions {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 4.5%;
+
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 14px;
+
+  z-index: 5;
+}
+
+.retro-computer-actions button {
+  min-width: 0;
+  min-height: 48px;
+  padding: 8px;
+
+  border-radius: 6px;
+  font-size: clamp(11px, 1.3vw, 16px);
+  font-weight: 900;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.retro-run-button {
+  color: #fff0d7;
+  background: #210c10;
+  border: 2px solid #e9bf32;
+  box-shadow: 0 3px 0 #8e6b15;
+}
+
+.retro-run-button span {
+  margin-right: 8px;
+}
+
+.retro-run-button:hover:not(:disabled) {
+  color: #210c10;
+  background: #e9bf32;
+}
+
+.retro-submit-button {
+  color: white;
+  background: #ed2939;
+  border: 2px solid #ff5965;
+  box-shadow: 0 3px 0 #8b1725;
+}
+
+.retro-submit-button:hover:not(:disabled) {
+  background: #ff4655;
+  transform: translateY(-1px);
+}
+
+.retro-computer-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 900px) {
+  .retro-computer-frame {
+    height: clamp(470px, 75vw, 620px);
+  }
+
+  .retro-editor-toolbar {
+    min-height: 48px;
+    padding: 5px;
+  }
+
+  .retro-toolbar-controls {
+    gap: 5px;
+  }
+
+  .retro-file-tab {
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .retro-language-select {
+    height: 29px;
+  }
+
+  .retro-language-select select {
+    width: 75px;
+    font-size: 10px;
+  }
+
+  .retro-font-controls button {
+    width: 25px;
+    height: 25px;
+    font-size: 10px;
+  }
+
+  .retro-save-status {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 600px) {
+  .retro-computer-frame {
+    height: 470px;
+    min-height: 470px;
+  }
+
+  .retro-monitor-window {
+    left: 11.7%;
+    top: 7.8%;
+    width: 76.7%;
+    height: 48.2%;
+  }
+
+  .retro-editor-toolbar {
+    min-height: 45px;
+    padding: 4px;
+  }
+
+  .retro-toolbar-controls {
+    gap: 4px;
+  }
+
+  .retro-file-tab {
+    padding: 4px 5px;
+    font-size: 9px;
+  }
+
+  .retro-language-symbol {
+    min-width: 23px;
+    font-size: 8px;
+  }
+
+  .retro-language-select select {
+    width: 65px;
+    padding: 0 3px;
+    font-size: 9px;
+  }
+
+  .retro-font-controls {
+    gap: 3px;
+  }
+
+  .retro-font-controls button {
+    width: 23px;
+    height: 23px;
+  }
+
+  .retro-save-status {
+    font-size: 8px;
+  }
+
+  .retro-output-panel {
+    padding: 9px;
+  }
+
+  .retro-output-content pre {
+    font-size: 10px;
+  }
+
+  .retro-computer-actions {
+    left: 7%;
+    right: 7%;
+    bottom: 4%;
+    gap: 7px;
+  }
+
+  .retro-computer-actions button {
+    min-height: 36px;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+}

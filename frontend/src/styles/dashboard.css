@@ -1,4 +1,3 @@
-
 /* =========================================
    CODYEYY - GAMING DASHBOARD
 ========================================= */
@@ -144,23 +143,6 @@
 
 /* CENTRE: HEY YA ANIMATION */
 
-/* .dashboard-hero-animation {
-  width: 200px;
-  height: 112px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-  border-radius: 10px;
-
-  mix-blend-mode: screen;
-  opacity: 0.99;
-  -webkit-mask-image: radial-gradient(circle, black 60%, transparent 100%);
-  mask-image: radial-gradient(circle, black 60%, transparent 100%);
-} */
-
 .dashboard-hero-animation {
   width: 250px;
   height: 150px;
@@ -208,7 +190,7 @@
 
   color: #fff0d5;
   font-family: 'Silkscreen', monospace;
-  font-size: 15ypx;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 1px;
 
@@ -736,4 +718,30 @@
     justify-content: center;
     font-size: 16px;
   }
+}
+
+/* =========================================
+   LEADERBOARD NAVBAR LINK
+========================================= */
+
+.dashboard-leaderboard-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff0dc;
+  text-decoration: none;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  transition: color 0.2s ease;
+}
+
+.dashboard-leaderboard-link:hover {
+  color: #ffd52f;
+}
+
+.leaderboard-icon {
+  color: #ffd52f;
+  font-size: 25px;
 }

@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
@@ -11,6 +10,10 @@ import PrivateRoom from "./pages/PrivateRoom";
 import PrivateRoomDashboard from "./pages/PrivateRoomDashboard";
 import TemporaryRoom from "./pages/TemporaryRoom";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
+import ProfilePage from "./pages/ProfilePage";
+import RoomsPage from "./pages/RoomsPage";
+import GameStatsPage from "./pages/GameStatsPage";
+import Leaderboard from "./pages/Leaderboard";
 
 // Coding Arena
 import CodingArena from "./pages/CodingArena/CodingArena";
@@ -34,6 +37,12 @@ function App() {
         {/* Main dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
 
+        {/* Profile page */}
+        <Route path="/profile" element={<ProfilePage />} />
+
+        {/* Rooms page */}
+        <Route path="/Rooms" element={<RoomsPage />} />
+
         {/* Permanent private room */}
         <Route path="/private-room" element={<PrivateRoom />} />
 
@@ -43,10 +52,14 @@ function App() {
           element={<PrivateRoomDashboard />}
         />
 
+        <Route path="/leaderboard" element={<Leaderboard />} />
+
         <Route
           path="/private-room-dashboard/:roomCode"
           element={<PrivateRoomDashboard />}
         />
+
+        <Route path="/GameStats" element={<GameStatsPage />} />
 
         {/* Temporary room */}
         <Route path="/temporary-room" element={<TemporaryRoom />} />
