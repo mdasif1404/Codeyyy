@@ -4,6 +4,9 @@ import Room from "../models/Room.js";
 import { createRoomMatch } from "../services/challenge.service.js";
 import RoomMember from "../models/RoomMember.js";
 import Challenge from "../models/Challenge.js";
+import mongoose from "mongoose";
+import Match from "../models/Match.js";
+import Submission from "../models/Submission.js";
 
 
 // Create a temporary room
@@ -296,6 +299,183 @@ export const getTemporaryRoomDetails = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Unable to retrieve temporary room details"
+    });
+  }
+};
+
+
+export const getPermanentRoomMatchDetails = async (req, res) => {
+  try {
+    const { roomId, matchId } = req.params;
+    const userId = req.user.id;
+
+    // 1. Verify the permanent room
+    const room = await Room.findOne({
+      _id: roomId,
+      roomType: "permanent",
+      roomStatus: "active"
+    }).lean();
+
+    if (!room) {
+      return res.status(404).json({
+        success: false,
+        message: "Permanent room not found"
+      });
+    }
+
+    // 2. Verify active membership
+    const membership = await RoomMember.findOne({
+      room: roomId,
+      user: userId,
+      status: "active"
+    });
+
+    if (!membership) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not an active member of this room"
+      });
+    }
+
+    // 3. Retrieve match and challenge
+    const match = await Match.findOne({
+      _id: matchId,
+      room: roomId
+    })
+      .populate(
+        "challenge",
+        "title description difficulty inputFormat outputFormat constraints examples starterCode points timeLimit memoryLimit"
+      )
+      .lean();
+
+    if (!match) {
+      return res.status(404).json({
+        success: false,
+        message: "Match not found"
+      });
+    }
+
+    if (match.status !== "running") {
+      return res.status(409).json({
+        success: false,
+        message: "This match is no longer running"
+      });
+    }
+
+    if (!match.challenge) {
+      return res.status(404).json({
+        success: false,
+        message: "Challenge not found"
+      });
+    }
+
+    // 4. Return the same response structure as temporary rooms
+    return res.status(200).json({
+      success: true,
+      message: "Match details retrieved successfully",
+      data: {
+        room: {
+          roomId: room._id,
+          roomName: room.roomName,
+          roomCode: room.roomCode,
+          difficulty: room.difficulty,
+          roomType: room.roomType
+        },
+        match: {
+          matchId: match._id,
+          status: match.status,
+          participants: match.participants,
+          startedAt: match.startedAt,
+          endsAt: match.endsAt,
+          duration: match.duration
+        },
+        challenge: match.challenge
+      }
+    });
+
+  } catch (error) {
+    console.error("Get permanent match details error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to retrieve match details"
+    });
+  }
+};
+
+
+
+// Get the logged-in user's active temporary room
+export const getMyTemporaryRoom = async (req, res) => {
+  try {
+    const memberships = await RoomMember.find({
+      user: req.user.id,
+      status: "active"
+    })
+      .sort({ joinedAt: -1 })
+      .populate({
+        path: "room",
+        match: {
+          roomType: "temporary",
+          roomStatus: "active"
+        }
+      });
+    
+    const membership = memberships.find(
+      (item) => item.room !== null
+    );
+      // .populate("user", "username");
+
+    if (!membership || !membership.room) {
+      return res.status(404).json({
+        success: false,
+        message: "You are not in an active temporary room"
+      });
+    }
+
+    const room = membership.room;
+
+    const members = await RoomMember.find({
+      room: room._id,
+      status: "active"
+    })
+      .populate("user", "username")
+      .lean();
+
+    const memberList = members
+      .filter(member => member.user)
+      .map(member => ({
+        userId: member.user._id,
+        username: member.user.username,
+        role: member.role,
+        joinedAt: member.joinedAt
+      }));
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        roomId: room._id,
+        roomCode: room.roomCode,
+        roomName: room.roomName,
+        role: membership.role,
+        owner: {
+          userId: room.owner,
+        },
+        difficulty: room.difficulty,
+        maxPlayers: room.maxPlayers,
+        settings: room.settings,
+        matchStatus: room.matchStatus,
+        activePlayers: memberList.length,
+        members: memberList
+      }
+    });
+
+  } catch (error) {
+    console.error("Get my temporary room error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to retrieve your temporary room"
     });
   }
 };
@@ -668,6 +848,165 @@ export const leaveRoom = async (req, res) => {
 };
 
 
+export const leaveTemporaryRoom = async (req, res) => {
+  const session = await mongoose.startSession();
+
+  try {
+    const { roomId } = req.params;
+    const userId = req.user.id;
+
+    let roomClosed = false;
+    let updatedMembers = [];
+
+    await session.withTransaction(async () => {
+      const room = await Room.findOne({
+        _id: roomId,
+        roomType: "temporary",
+        roomStatus: "active"
+      }).session(session);
+
+      if (!room) {
+        throw new Error("Temporary room not found");
+      }
+
+      if (room.matchStatus === "active") {
+        throw new Error("You cannot leave while a match is running");
+      }
+
+      const membership = await RoomMember.findOne({
+        room: roomId,
+        user: userId,
+        status: "active"
+      }).session(session);
+
+      if (!membership) {
+        throw new Error("You are not an active member of this room");
+      }
+
+      // If the owner leaves, close and delete the temporary room.
+      if (membership.role === "owner") {
+        const matches = await Match.find({
+          room: roomId
+        }).select("_id").session(session);
+
+        const matchIds = matches.map(match => match._id);
+
+        if (matchIds.length > 0) {
+          await Submission.deleteMany(
+            { match: { $in: matchIds } },
+            { session }
+          );
+
+          await Match.deleteMany(
+            { room: roomId },
+            { session }
+          );
+        }
+
+        await RoomMember.deleteMany(
+          { room: roomId },
+          { session }
+        );
+
+        await Room.deleteOne(
+          { _id: roomId, roomType: "temporary" },
+          { session }
+        );
+
+        roomClosed = true;
+        return;
+      }
+
+      // Regular member leaves.
+      membership.status = "left";
+      await membership.save({ session });
+
+      const members = await RoomMember.find({
+        room: roomId,
+        status: "active"
+      })
+        .populate("user", "username")
+        .session(session)
+        .lean();
+
+      updatedMembers = members
+        .filter(member => member.user)
+        .map(member => ({
+          userId: member.user._id,
+          username: member.user.username,
+          role: member.role,
+          joinedAt: member.joinedAt
+        }));
+    });
+
+    const io = req.app.get("io");
+    const socketRoom = `room:${roomId}`;
+
+    if (roomClosed) {
+      // Notify everyone before removing their sockets.
+      io?.to(socketRoom).emit("room:closed", {
+        roomId,
+        message: "The room owner has closed this temporary room."
+      });
+
+      // Remove all connected sockets from the deleted room.
+      if (io) {
+        const sockets = await io.in(socketRoom).fetchSockets();
+
+        for (const connectedSocket of sockets) {
+          await connectedSocket.leave(socketRoom);
+        }
+      }
+    } else {
+      // Remove the leaving user's sockets from the room.
+      if (io) {
+        const sockets = await io.in(socketRoom).fetchSockets();
+
+        for (const connectedSocket of sockets) {
+          if (connectedSocket.user?.id === userId) {
+            await connectedSocket.leave(socketRoom);
+          }
+        }
+
+        io.to(socketRoom).emit("room:members", {
+          roomId,
+          members: updatedMembers
+        });
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: roomClosed
+        ? "Temporary room closed successfully"
+        : "You left the temporary room successfully",
+      data: {
+        roomId,
+        roomClosed,
+        members: updatedMembers
+      }
+    });
+
+  } catch (error) {
+    console.error("Leave temporary room error:", error);
+
+    const statusCode =
+      error.message === "Temporary room not found" ? 404 :
+      error.message === "You are not an active member of this room" ? 403 :
+      error.message === "You cannot leave while a match is running" ? 409 :
+      500;
+
+    return res.status(statusCode).json({
+      success: false,
+      message: error.message || "Unable to leave temporary room"
+    });
+
+  } finally {
+    await session.endSession();
+  }
+};
+
+
 // Start a room match
 export const startRoomMatch = async (req, res) => {
   try {
@@ -944,6 +1283,106 @@ export const getRoomDetails = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Unable to retrieve room details"
+    });
+  }
+};
+
+
+export const getTemporaryRoomMatchDetails = async (req, res) => {
+  try {
+    const { roomId, matchId } = req.params;
+    const userId = req.user.id;
+
+    // 1. Verify the temporary room
+    const room = await Room.findOne({
+      _id: roomId,
+      roomType: "temporary",
+      roomStatus: "active"
+    }).lean();
+
+    if (!room) {
+      return res.status(404).json({
+        success: false,
+        message: "Temporary room not found"
+      });
+    }
+
+    // 2. Verify active membership
+    const membership = await RoomMember.findOne({
+      room: roomId,
+      user: userId,
+      status: "active"
+    });
+
+    if (!membership) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not an active member of this room"
+      });
+    }
+
+    // 3. Retrieve the match and challenge
+    const match = await Match.findOne({
+      _id: matchId,
+      room: roomId
+    })
+      .populate(
+        "challenge",
+        "title description difficulty inputFormat outputFormat constraints examples starterCode points timeLimit memoryLimit"
+      )
+      .lean();
+
+    if (!match) {
+      return res.status(404).json({
+        success: false,
+        message: "Match not found"
+      });
+    }
+
+    if (match.status !== "running") {
+      return res.status(409).json({
+        success: false,
+        message: "This match is no longer running"
+      });
+    }
+
+    if (!match.challenge) {
+      return res.status(404).json({
+        success: false,
+        message: "Challenge not found"
+      });
+    }
+
+    // 4. Return match, room and challenge information
+    return res.status(200).json({
+      success: true,
+      message: "Match details retrieved successfully",
+      data: {
+        room: {
+          roomId: room._id,
+          roomName: room.roomName,
+          roomCode: room.roomCode,
+          difficulty: room.difficulty,
+          roomType: room.roomType
+        },
+        match: {
+          matchId: match._id,
+          status: match.status,
+          participants: match.participants,
+          startedAt: match.startedAt,
+          endsAt: match.endsAt,
+          duration: match.duration
+        },
+        challenge: match.challenge
+      }
+    });
+
+  } catch (error) {
+    console.error("Get temporary match details error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to retrieve match details"
     });
   }
 };

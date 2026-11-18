@@ -1,13 +1,10 @@
+
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/authContext";
 import "../styles/privateRoomDashboard.css";
 import socket from "../services/socket";
-
-// Temporary sample data.
-// Later, replace this with player data from your backend.
-
 
 // Continuous pixel-style progress bar
 function PixelProgressBar({ percentage }) {
@@ -59,9 +56,7 @@ function PlayerCard({ player, rank, selected, onClick }) {
           <div className="player-metric">
             <div className="metric-heading">
               <span>ROOM ROLE</span>
-              <strong>
-                {player.role.toUpperCase()}
-              </strong>
+              <strong>{player.role.toUpperCase()}</strong>
             </div>
           </div>
 
@@ -89,7 +84,10 @@ function PlayerCard({ player, rank, selected, onClick }) {
           onError={(event) => {
             event.currentTarget.style.display = "none";
             const fallback = event.currentTarget.nextElementSibling;
-            if (fallback) fallback.style.display = "flex";
+
+            if (fallback) {
+              fallback.style.display = "flex";
+            }
           }}
         />
 
@@ -102,7 +100,6 @@ function PlayerCard({ player, rank, selected, onClick }) {
     </button>
   );
 }
-
 
 export default function PrivateRoomDashboard() {
   const { roomId } = useParams();
@@ -117,9 +114,12 @@ export default function PrivateRoomDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [leavingRoom, setLeavingRoom] = useState(false);
+  const [startingMatch, setStartingMatch] = useState(false);
+
   const roomCode = room?.roomCode || "LOADING...";
 
-
+  // Fetch room details
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
@@ -149,9 +149,9 @@ export default function PrivateRoomDashboard() {
     if (roomId) {
       fetchRoomDetails();
     }
-
   }, [roomId]);
 
+  // Socket.IO room membership and live player updates
   useEffect(() => {
     if (!roomId) return;
 
@@ -174,8 +174,18 @@ export default function PrivateRoomDashboard() {
       }
     };
 
+    const handleMatchStarted = ({ roomId: startedRoomId, matchId }) => {
+      if (startedRoomId !== roomId || !matchId) return;
+
+      console.log("PERMANENT MATCH NAVIGATION:", matchId, roomId);
+      navigate(
+        `/arena?roomId=${roomId}&matchId=${matchId}&roomType=permanent`
+      );
+    };
+
     socket.on("connect", joinSocketRoom);
     socket.on("room:members", handleRoomMembers);
+    socket.on("room:matchStarted", handleMatchStarted);
 
     if (socket.connected) {
       joinSocketRoom();
@@ -187,9 +197,11 @@ export default function PrivateRoomDashboard() {
       socket.off("connect", joinSocketRoom);
       socket.off("room:members", handleRoomMembers);
       socket.emit("room:leave", { roomId });
+      socket.off("room:matchStarted", handleMatchStarted);
     };
-    }, [roomId]);
+  }, [roomId]);
 
+  // Copy room code
   const handleCopyRoomCode = async () => {
     try {
       await navigator.clipboard.writeText(roomCode);
@@ -203,25 +215,55 @@ export default function PrivateRoomDashboard() {
     }
   };
 
-  const [startingMatch, setStartingMatch] = useState(false);
+  // Leave permanent room
+  const handleLeaveRoom = async () => {
+    if (leavingRoom) return;
 
+    const confirmed = window.confirm(
+      "Are you sure you want to leave this room?"
+    );
+
+    if (!confirmed) return;
+
+    setLeavingRoom(true);
+    setError("");
+
+    try {
+      await api.post(`/rooms/${roomId}/leave`);
+
+      socket.emit("room:leave", { roomId });
+
+      navigate("/private-room");
+    } catch (err) {
+      console.error("Leave room error:", err);
+
+      setError(
+        err.response?.data?.message ||
+        "Unable to leave room."
+      );
+    } finally {
+      setLeavingRoom(false);
+    }
+  };
+
+  // Start match
   const handleStartGame = async () => {
     if (startingMatch) return;
-  
+
     setStartingMatch(true);
     setError("");
-  
+
     try {
       const response = await api.post(`/rooms/${roomId}/start`);
-    
+
       if (response.data.success) {
         const matchId = response.data.data.matchId;
-      
-        navigate(`/arena?roomId=${roomId}&matchId=${matchId}`);
+
+        navigate(`/arena?roomId=${roomId}&matchId=${matchId}&roomType=permanent`);
       }
     } catch (err) {
       console.error("Start match error:", err);
-    
+
       setError(
         err.response?.data?.message ||
         "Unable to start the match."
@@ -231,6 +273,7 @@ export default function PrivateRoomDashboard() {
     }
   };
 
+  // Loading state
   if (loading) {
     return (
       <div className="private-dashboard-page">
@@ -240,6 +283,7 @@ export default function PrivateRoomDashboard() {
     );
   }
 
+  // Error state
   if (error || !room) {
     return (
       <div className="private-dashboard-page">
@@ -252,10 +296,11 @@ export default function PrivateRoomDashboard() {
 
   return (
     <div className="private-dashboard-page">
+
       {/* HEADER */}
       <header className="private-dashboard-header">
         <Link to="/dashboard" className="private-dashboard-logo">
-          <img src="/assets/codyyy-logo.jpg" alt="Codyyy Logo" />
+          <img src="/assets/codeyyy-logo.jpg" alt="Codeyyy Logo" />
         </Link>
 
         <span className="private-room-badge">PRIVATE ROOM</span>
@@ -268,13 +313,16 @@ export default function PrivateRoomDashboard() {
             title="Copy room code"
           >
             <span>ROOM: {roomCode}</span>
+
             <span className="copy-symbol">
               {copied ? "✓" : "▢"}
             </span>
           </button>
 
           <div className="private-player-count">
-            <span>{players.length} / {room?.maxPlayers || 0} PLAYERS</span>
+            <span>
+              {players.length} / {room?.maxPlayers || 0} PLAYERS
+            </span>
           </div>
 
           <Link to="/login" className="private-profile-link">
@@ -290,6 +338,7 @@ export default function PrivateRoomDashboard() {
 
       {/* MAIN */}
       <main className="private-dashboard-main">
+
         <section className="private-dashboard-intro">
           <p className="dashboard-eyebrow">
             YOUR SQUAD. YOUR BATTLE.
@@ -297,7 +346,16 @@ export default function PrivateRoomDashboard() {
 
           <div className="dashboard-title-row">
             <div>
-              <h1>{room?.roomName || "THE ARENA IS READY."}</h1>
+              <div className="room-title-with-code">
+                <h1>
+                  {room?.roomName || "THE ARENA IS READY."}
+                </h1>
+
+                <span className="room-title-code">
+                  CODE: {roomCode}
+                </span>
+              </div>
+
               <p>
                 Permanent private room · {room?.maxPlayers} player capacity
               </p>
@@ -308,6 +366,15 @@ export default function PrivateRoomDashboard() {
             </span>
           </div>
 
+          <button
+            type="button"
+            className="leave-room-button"
+            onClick={handleLeaveRoom}
+            disabled={leavingRoom}
+          >
+            {leavingRoom ? "LEAVING ROOM..." : "LEAVE ROOM"}
+          </button>
+
           {copied && (
             <p className="copy-feedback">
               ROOM CODE COPIED!
@@ -317,6 +384,7 @@ export default function PrivateRoomDashboard() {
 
         {/* LEADERBOARD + MATCH DETAILS */}
         <section className="dashboard-top-grid">
+
           {/* LEADERBOARD */}
           <div className="dashboard-panel leaderboard-panel">
             <div className="panel-heading">
@@ -337,8 +405,12 @@ export default function PrivateRoomDashboard() {
                   key={player.userId}
                   player={player}
                   rank={index + 1}
-                  selected={selectedPlayer === String(player.userId)}
-                  onClick={() => setSelectedPlayer(String(player.userId))}
+                  selected={
+                    selectedPlayer === String(player.userId)
+                  }
+                  onClick={() =>
+                    setSelectedPlayer(String(player.userId))
+                  }
                 />
               ))}
             </div>
@@ -355,7 +427,9 @@ export default function PrivateRoomDashboard() {
             </p>
 
             <div className="match-detail-item">
-              <h3>{room?.difficulty?.toUpperCase() || "LOADING..."}</h3>
+              <h3>
+                {room?.difficulty?.toUpperCase() || "LOADING..."}
+              </h3>
               <p>Difficulty level</p>
             </div>
 
@@ -375,7 +449,9 @@ export default function PrivateRoomDashboard() {
             </div>
 
             <div className="match-detail-item">
-              <p className="languages-label">SUPPORTED LANGUAGES</p>
+              <p className="languages-label">
+                SUPPORTED LANGUAGES
+              </p>
 
               <div className="language-list">
                 <span>Python</span>
@@ -412,6 +488,7 @@ export default function PrivateRoomDashboard() {
           </div>
 
           <h2>READY TO BATTLE?</h2>
+
           <p>
             Gather your squad and begin the coding challenge.
           </p>
@@ -420,8 +497,10 @@ export default function PrivateRoomDashboard() {
             type="button"
             className="start-game-button"
             onClick={handleStartGame}
+            disabled={startingMatch}
           >
-            START GAME <span>→</span>
+            {startingMatch ? "STARTING..." : "START GAME"}
+            <span>→</span>
           </button>
 
           <span className="host-notice">

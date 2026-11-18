@@ -35,6 +35,7 @@ int main() {
 const CodeEditor = ({
   challengeId = "two-sum",
   initialCode,
+  starterCodes,
   onRun,
   onSubmit,
   onExecute,
@@ -47,6 +48,7 @@ const CodeEditor = ({
   const [loading, setLoading] = useState(false);
   const [operation, setOperation] = useState("");
   const [saveStatus, setSaveStatus] = useState("Saved");
+  const [stdin, setStdin] = useState("");
 
   const editorRef = useRef(null);
   const saveTimeout = useRef(null);
@@ -60,12 +62,20 @@ const CodeEditor = ({
     setCode(
       savedCode !== null
         ? savedCode
-        : initialCode || STARTER_CODE[language]
+        : starterCodes?.[language] ||
+          initialCode ||
+          STARTER_CODE[language]
     );
 
     setOutput("");
     setOutputType("info");
-  }, [language, challengeId, initialCode, storageKey]);
+  }, [
+    language,
+    challengeId,
+    initialCode,
+    starterCodes,
+    storageKey
+  ]);
 
   // Auto-save code.
   useEffect(() => {
@@ -134,57 +144,75 @@ const CodeEditor = ({
     if (typeof result === "string") {
       setOutput(result);
       setOutputType("success");
-
-      if (onExecute) {
-        onExecute({
-          compileStatus: "SUCCESS",
-          executionStatus: "COMPLETED",
-          results: [],
-          errorMessage: result,
-        });
-      }
       return;
     }
 
-    const message =
-      result?.stdout ||
-      result?.output ||
-      result?.message ||
-      result?.stderr ||
-      result?.error ||
-      JSON.stringify(result, null, 2);
+    const status = String(result?.status || "").toLowerCase();
+    const verdict = String(result?.verdict || "").toLowerCase();
 
-    const hasCompileError =
-      result?.compileStatus?.toUpperCase() === "FAILED" ||
-      Boolean(result?.compileError);
+    const isCompilationError =
+      status.includes("compilation error") ||
+      verdict.includes("compilation-error");
 
-    const hasRuntimeOrTestError =
-      Boolean(result?.stderr || result?.error) ||
-      result?.status === "error" ||
-      result?.status === "failed" ||
-      result?.executionStatus?.toUpperCase() === "FAILED" ||
-      (Array.isArray(result?.results) &&
-        result.results.some((test) => test.status === "failed"));
+    const isFailure =
+      isCompilationError ||
+      status.includes("runtime error") ||
+      status.includes("time limit") ||
+      status.includes("memory limit") ||
+      status.includes("error") ||
+      status.includes("failed") ||
+      (verdict !== "" && verdict !== "accepted");
 
-    const hasError = hasCompileError || hasRuntimeOrTestError;
+    let message = "";
 
-    setOutput(message || "Operation completed.");
-    setOutputType(hasError ? "error" : "success");
+    // RUN response
+    if (result?.status) {
+      message =
+        result.compileOutput ||
+        result.stderr ||
+        result.stdout ||
+        result.output ||
+        result.status;
+    }
 
-    // Forward execution outcome to CodingArena -> TestResults
+    // SUBMIT response
+    if (result?.verdict) {
+      const passed = result.passedTests ?? 0;
+      const total = result.totalTests ?? 0;
+
+      message =
+        `Verdict: ${result.verdict}\n` +
+        `Tests passed: ${passed}/${total}\n` +
+        `Base score: ${result.baseScore ?? 0}`;
+
+      if (result.matchCompleted) {
+        message += "\nMatch completed!";
+      }
+    }
+
+    if (!message) {
+      message =
+        result?.stdout ||
+        result?.output ||
+        result?.message ||
+        result?.stderr ||
+        result?.error ||
+        JSON.stringify(result, null, 2);
+    }
+
+    setOutput(message);
+    setOutputType(isFailure ? "error" : "success");
+
     if (onExecute) {
       onExecute({
-        compileStatus: hasCompileError ? "FAILED" : "SUCCESS",
-        executionStatus: hasCompileError
-          ? "NOT RUN"
-          : hasRuntimeOrTestError
-          ? "FAILED"
-          : "COMPLETED",
+        compileStatus: isCompilationError ? "FAILED" : "SUCCESS",
+        executionStatus: isFailure ? "FAILED" : "COMPLETED",
         results: result?.results || [],
-        errorMessage: message || "Operation completed.",
+        errorMessage: isFailure ? message : "",
       });
     }
   };
+
 
   // Run code through the existing backend callback.
   const handleRun = async () => {
@@ -205,9 +233,7 @@ const CodeEditor = ({
     }
 
     if (!onRun) {
-      setOutput(
-        "Run API is not connected yet. Backend integration is pending."
-      );
+      setOutput("Run API is not connected yet.");
       setOutputType("info");
       return;
     }
@@ -222,6 +248,7 @@ const CodeEditor = ({
         code,
         language,
         challengeId,
+        stdin,
       });
 
       displayResult(result);
@@ -243,6 +270,7 @@ const CodeEditor = ({
       setOperation("");
     }
   };
+
 
   // Submit solution through the existing backend callback.
   const handleSubmit = async () => {
@@ -439,6 +467,19 @@ const CodeEditor = ({
           </button>
         </div>
 
+      </div>
+
+      {/* CUSTOM INPUT FOR RUN */}
+      <div className="retro-input-panel">
+        <label htmlFor="code-input">CUSTOM INPUT (STDIN)</label>
+        <textarea
+          id="code-input"
+          value={stdin}
+          onChange={(event) => setStdin(event.target.value)}
+          placeholder="Enter your input here..."
+          rows={4}
+          disabled={loading}
+        />
       </div>
 
       {/* CONSOLE BELOW THE COMPUTER */}

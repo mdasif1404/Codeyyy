@@ -386,6 +386,57 @@
   cursor: not-allowed;
 }
 
+
+/* CUSTOM INPUT PANEL */
+
+.retro-input-panel {
+  margin-top: 14px;
+  padding: 14px;
+  background: #10090B;
+  border: 1px solid #65303B;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.retro-input-panel label {
+  color: #E9BF32;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.retro-input-panel textarea {
+  width: 100%;
+  min-height: 85px;
+  resize: vertical;
+  box-sizing: border-box;
+  padding: 12px;
+  background: #1B1115;
+  color: #FFF0D7;
+  border: 1px solid #65303B;
+  border-radius: 5px;
+  outline: none;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.retro-input-panel textarea:focus {
+  border-color: #E9BF32;
+}
+
+.retro-input-panel textarea::placeholder {
+  color: #8C817B;
+}
+
+.retro-input-panel textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
 /* =========================================
    RESPONSIVE DESIGN
 ========================================= */
@@ -501,3 +552,4 @@
     letter-spacing: 0;
   }
 }
+

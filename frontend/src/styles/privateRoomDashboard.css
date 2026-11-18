@@ -104,6 +104,46 @@
 /* =========================================
    MAIN CONTENT
 ========================================= */
+.room-title-with-code {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.room-title-code {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.leave-room-button {
+  margin-top: 18px;
+  padding: 11px 20px;
+  border: 1px solid #ff5555;
+  border-radius: 5px;
+  background: transparent;
+  color: #ff6666;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.leave-room-button:hover {
+  background: #ff5555;
+  color: #ffffff;
+}
+
+.leave-room-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .private-dashboard-main {
   width: min(1400px, 96%);

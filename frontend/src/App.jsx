@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
@@ -20,9 +21,7 @@ import Leaderboard from "./pages/Leaderboard";
 import { AuthProvider } from "./context/authContext";
 import ProtectedRoute from "./components/protectedRoute";
 
-// Coding Arena
 import CodingArena from "./pages/CodingArena/CodingArena";
-
 import IntroAnimation from "./components/IntroAnimation";
 
 function App() {
@@ -42,43 +41,30 @@ function App() {
           <Route path="/verify-email" element={<VerifyEmailPage />} />
 
           {/* Protected pages */}
-          <Route element={<ProtectedRoute />}/>
+          <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
 
+            {/* Permanent private rooms */}
             <Route path="/private-room" element={<PrivateRoom />} />
-
-        {/* Profile page */}
-        <Route path="/profile" element={<ProfilePage />} />
-
-        {/* Rooms page */}
-        <Route path="/Rooms" element={<RoomsPage />} />
-
-        {/* Permanent private room */}
-        <Route path="/private-room" element={<PrivateRoom />} />
-
             <Route
               path="/private-room-dashboard/:roomId"
               element={<PrivateRoomDashboard />}
             />
 
-        <Route path="/leaderboard" element={<Leaderboard />} />
+            {/* Temporary rooms */}
+            <Route path="/temporary-room" element={<TemporaryRoom />} />
 
-        <Route
-          path="/private-room-dashboard/:roomCode"
-          element={<PrivateRoomDashboard />}
-        />
+            {/* Other protected pages */}
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/Rooms" element={<RoomsPage />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/GameStats" element={<GameStatsPage />} />
 
-        <Route path="/GameStats" element={<GameStatsPage />} />
-
-        {/* Temporary room */}
-        <Route path="/temporary-room" element={<TemporaryRoom />} />
-
-        {/* Coding Arena */}
-        <Route path="/arena" element={<CodingArena />} />
-
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
-      </Routes>
-    </>
+            {/* Coding Arena */}
+            <Route path="/arena" element={<CodingArena />} />
+          </Route>
+        </Routes>
+      </>
     </AuthProvider>
   );
 }

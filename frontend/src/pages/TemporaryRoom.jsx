@@ -1,18 +1,12 @@
-
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import api from "../services/api.js";
+import socket from "../services/socket.js";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/TemporaryRoom.css";
 
-const initialPlayers = [
-  { id: 1, name: "You", role: "Host", status: "READY", host: true },
-  { id: 2, name: "Player 02", role: "Opponent", status: "READY" },
-  { id: 3, name: "Player 03", role: "Opponent", status: "READY" },
-  { id: 4, name: "Player 04", role: "Opponent", status: "WAITING" },
-];
-
 function TemporaryRoom() {
-  const [players] = useState(initialPlayers);
-
+  const [players, setPlayers] = useState([]);
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -25,8 +19,123 @@ function TemporaryRoom() {
   const [copied, setCopied] = useState(false);
 
   // Temporary room code for UI testing.
-  // Replace this with the backend-generated room code later.
-  const roomCode = "XY82KQ";
+  const [roomCode, setRoomCode] = useState("");
+  const [roomId, setRoomId] = useState("");
+  const [creatingRoom, setCreatingRoom] = useState(false);
+  const [roomError, setRoomError] = useState("");
+  const [roomDetails, setRoomDetails] = useState(null);
+
+  // Popup state
+  const [showRoomDialog, setShowRoomDialog] = useState(true);
+  const [dialogMode, setDialogMode] = useState("choice");
+
+  // Create room form state
+  const [roomName, setRoomName] = useState("");
+  const [difficulty, setDifficulty] = useState("Medium");
+  const [maxPlayers, setMaxPlayers] = useState("4");
+
+  // Join room form state
+  const [joinCode, setJoinCode] = useState("");
+
+  // Listen for real-time room member updates
+  useEffect(() => {
+    const handleRoomMembers = (data) => {
+      const members = Array.isArray(data) ? data : data?.members || [];
+
+      setPlayers(
+        members.map((member) => ({
+          id: member.userId,
+          name: member.username,
+          role: member.role === "owner" ? "Host" : "Opponent",
+          status: "READY",
+          host: member.role === "owner",
+        }))
+      );
+    };
+
+    socket.on("room:members", handleRoomMembers);
+
+    const handleMatchStarted = (data) => {
+      if (!data?.matchId) {
+        console.error("Invalid match-start event:", data);
+        return;
+      }
+    
+      navigate(`/arena?matchId=${matchId}&roomId=${roomId}&roomType=temporary`);
+    };
+
+    socket.on("room:matchStarted", handleMatchStarted);
+
+    const handleRoomClosed = (data) => {
+      alert(data?.message || "The room has been closed by the owner.");
+
+      setRoomId("");
+      setRoomCode("");
+      setRoomDetails(null);
+      setPlayers([]);
+
+      setShowRoomDialog(true);
+      setDialogMode("choice");
+
+      socket.disconnect();
+    };
+
+    socket.on("room:closed", handleRoomClosed);
+
+    return () => {
+      socket.off("room:members", handleRoomMembers);
+      socket.off("room:matchStarted", handleMatchStarted);
+      socket.off("room:closed", handleRoomClosed);
+    };
+  }, [navigate]);
+
+  // Restore an existing temporary room after page reload
+  useEffect(() => {
+    const restoreTemporaryRoom = async () => {
+      try {
+        const response = await api.get("/rooms/temporary/my-room");
+        const roomData = response.data.data;
+
+        setRoomId(roomData.roomId);
+        setRoomCode(roomData.roomCode);
+        setRoomDetails(roomData);
+
+        setPlayers(
+          (roomData.members || []).map((member) => ({
+            id: member.userId,
+            name: member.username,
+            role: member.role === "owner" ? "Host" : "Opponent",
+            status: "READY",
+            host: member.role === "owner",
+          }))
+        );
+
+        setShowRoomDialog(false);
+
+        // Reconnect to the room's Socket.IO channel
+        if (socket.connected) {
+          socket.emit("room:join", { roomId: roomData.roomId });
+        } else {
+          socket.connect();
+
+          socket.once("connect", () => {
+            socket.emit("room:join", { roomId: roomData.roomId });
+          });
+        }
+
+      } catch (error) {
+        if (error.response?.status === 404) {
+          setShowRoomDialog(true);
+        } else {
+          console.error("Temporary room restoration failed:", error);
+          setShowRoomDialog(true);
+          setRoomError("Unable to restore your room. Please try again.");
+        }
+      }
+    };
+
+    restoreTemporaryRoom();
+  }, []);
 
   const handleCopy = async () => {
     try {
@@ -67,12 +176,313 @@ function TemporaryRoom() {
     setMessage("");
   };
 
-  const handleStartBattle = () => {
-    alert("Battle starting! Game integration will be added next.");
+  const handleStartBattle = async () => {
+    if (!roomId || !roomDetails) {
+      alert("Please create or join a temporary room first.");
+      return;
+    }
+
+    try {
+      const response = await api.post(
+        `/rooms/temporary/${roomId}/start`
+      );
+
+      const matchId = response.data.data.matchId;
+
+      navigate(`/arena?matchId=${matchId}&roomId=${roomId}&roomType=temporary`);
+
+    } catch (error) {
+      console.error("Start battle failed:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Unable to start the battle."
+      );
+    }
+  };
+
+  
+  const handleCreateRoom = async (event) => {
+    event.preventDefault();
+
+    try {
+      setCreatingRoom(true);
+      setRoomError("");
+
+      const response = await api.post("/rooms/temporary", {
+        roomName: roomName.trim(),
+        difficulty,
+        maxPlayers: Number(maxPlayers),
+      });
+
+      const roomData = response.data.data;
+      
+      setRoomDetails(roomData);
+      setPlayers([
+        {
+          id: roomData.owner?.userId || "owner",
+          name: "You",
+          role: "Host",
+          status: "READY",
+          host: true,
+        },
+      ]);
+      setRoomCode(roomData.roomCode);
+      setRoomId(roomData.roomId);
+
+      setShowRoomDialog(false);
+      const joinSocketRoom = () => {
+        socket.emit("room:join", { roomId: roomData.roomId }, (response) => {
+          if (response?.success && response.members) {
+            setPlayers(
+              response.members.map((member) => ({
+                id: member.userId,
+                name: member.username,
+                role: member.role === "owner" ? "Host" : "Opponent",
+                status: "READY",
+                host: member.role === "owner",
+              }))
+            );
+          } else {
+            console.error("Socket room join failed:", response?.message);
+          }
+        });
+      };
+
+      if (socket.connected) {
+        joinSocketRoom();
+      } else {
+        socket.connect();
+        socket.once("connect", joinSocketRoom);
+      }
+
+    } catch (error) {
+      console.error("Temporary room creation failed:", error);
+
+      setRoomError(
+        error.response?.data?.message ||
+        "Unable to create room. Please try again."
+      );
+    } finally {
+      setCreatingRoom(false);
+    }
+  };
+
+  const handleJoinRoom = async (event) => {
+    event.preventDefault();
+
+    try {
+      setCreatingRoom(true);
+      setRoomError("");
+
+      const response = await api.post("/rooms/temporary/join", {
+        roomCode: joinCode.trim().toUpperCase(),
+      });
+
+      const roomData = response.data.data;
+
+      setRoomId(roomData.roomId);
+      setRoomCode(roomData.roomCode);
+      setRoomDetails(roomData);
+
+      setPlayers(
+        (roomData.members || []).map((member) => ({
+          id: member.userId,
+          name: member.username,
+          role: member.role === "owner" ? "Host" : "Opponent",
+          status: "READY",
+          host: member.role === "owner",
+        }))
+      );
+
+      setShowRoomDialog(false);
+
+      const joinSocketRoom = () => {
+        socket.emit("room:join", { roomId: roomData.roomId }, (response) => {
+          if (response?.success && response.members) {
+            setPlayers(
+              response.members.map((member) => ({
+                id: member.userId,
+                name: member.username,
+                role: member.role === "owner" ? "Host" : "Opponent",
+                status: "READY",
+                host: member.role === "owner",
+              }))
+            );
+          } else {
+            console.error("Socket room join failed:", response?.message);
+          }
+        });
+      };
+
+      if (socket.connected) {
+        joinSocketRoom();
+      } else {
+        socket.connect();
+        socket.once("connect", joinSocketRoom);
+      }
+
+    } catch (error) {
+      console.error("Temporary room joining failed:", error);
+
+      console.log("STATUS:", error.response?.status);
+      console.log("MESSAGE:", error.response?.data?.message);
+
+      setRoomError(
+        error.response?.data?.message ||
+        "Unable to join room. Please check the room code."
+      );
+    } finally {
+      setCreatingRoom(false);
+    }
+  };
+
+  const handleLeaveRoom = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to leave this temporary room?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await api.post(
+        `/rooms/temporary/${roomId}/leave`
+      );
+
+      socket.disconnect();
+
+      setRoomId("");
+      setRoomCode("");
+      setRoomDetails(null);
+      setPlayers([]);
+      setShowRoomDialog(true);
+      setDialogMode("choice");
+
+      console.log(response.data.message);
+
+    } catch (error) {
+      console.error("Leave temporary room failed:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Unable to leave the temporary room."
+      );
+    }
   };
 
   return (
     <div className="temporary-room">
+
+      {/* ROOM SELECTION POPUP */}
+      {showRoomDialog && (
+        <div className="temporary-dialog-overlay">
+          <div className="temporary-dialog">
+
+            {dialogMode === "choice" && (
+              <>
+                <h2>ENTER THE ARENA</h2>
+                <p>Would you like to create a room or join an existing one?</p>
+
+                <button
+                  type="button"
+                  onClick={() => setDialogMode("create")}
+                >
+                  CREATE TEMPORARY ROOM
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setDialogMode("join")}
+                >
+                  JOIN TEMPORARY ROOM
+                </button>
+              </>
+            )}
+
+            {dialogMode === "create" && (
+              <>
+
+                <p>Set up your temporary coding battle.</p>
+
+                {roomError && (
+                  <p className="room-form-error">{roomError}</p>
+                )}
+                <form onSubmit={handleCreateRoom}>
+                  <input
+                    type="text"
+                    placeholder="Room name"
+                    value={roomName}
+                    onChange={(event) => setRoomName(event.target.value)}
+                    maxLength={50}
+                    required
+                  />
+
+                  <select
+                    value={difficulty}
+                    onChange={(event) => setDifficulty(event.target.value)}
+                  >
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                  </select>
+
+                  <select
+                    value={maxPlayers}
+                    onChange={(event) => setMaxPlayers(event.target.value)}
+                  >
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4">4 Players</option>
+                    <option value="5">5 Players</option>
+                    <option value="6">6 Players</option>
+                  </select>
+
+                  <button type="submit" disabled={creatingRoom}>
+                    {creatingRoom ? "CREATING ROOM..." : "CREATE ROOM"}
+                  </button>
+                </form>
+
+                <button
+                  type="button"
+                  onClick={() => setDialogMode("choice")}
+                >
+                  BACK
+                </button>
+              </>
+            )}
+
+            {dialogMode === "join" && (
+              <>
+                <h2>JOIN ROOM</h2>
+                <p>Enter the room code shared by your friend.</p>
+
+                <form onSubmit={handleJoinRoom}>
+                  <input
+                    type="text"
+                    placeholder="Enter room code"
+                    value={joinCode}
+                    onChange={(event) =>
+                      setJoinCode(event.target.value.toUpperCase())
+                    }
+                    maxLength={8}
+                    required
+                  />
+
+                  <button type="submit">JOIN ROOM</button>
+                </form>
+
+                <button
+                  type="button"
+                  onClick={() => setDialogMode("choice")}
+                >
+                  BACK
+                </button>
+              </>
+            )}
+
+          </div>
+        </div>
+      )}
 
       {/* HEADER */}
       <header className="room-header">
@@ -107,7 +517,7 @@ function TemporaryRoom() {
       <section className="room-code-section">
         <p>YOUR ROOM CODE</p>
 
-        <h2>{roomCode}</h2>
+        <h2>{roomCode || "--------"}</h2>
 
         <button
           type="button"
@@ -133,7 +543,7 @@ function TemporaryRoom() {
           </h2>
 
           <p className="panel-count">
-            {players.length} / 4 CHALLENGERS
+            {players.length} / {roomDetails?.maxPlayers || 4} CHALLENGERS
           </p>
 
           {players.map((player) => (
@@ -268,6 +678,14 @@ function TemporaryRoom() {
           onClick={handleStartBattle}
         >
           START BATTLE →
+        </button>
+
+        <button
+          type="button"
+          className="leave-room-button"
+          onClick={handleLeaveRoom}
+        >
+          LEAVE ROOM
         </button>
 
         <p>
