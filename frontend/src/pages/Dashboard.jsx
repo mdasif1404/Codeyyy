@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import "../styles/dashboard.css";
 
@@ -58,13 +59,11 @@ function Dashboard() {
         {/* RIGHT: LEADERBOARD + PROFILE */}
         <nav className="dashboard-nav" aria-label="Dashboard navigation">
 
-          {/* PIXEL LEADERBOARD LINK */}
           <Link to="/leaderboard" className="dashboard-leaderboard-link">
             <span className="leaderboard-icon">▤</span>
             <span>LEADERBOARD</span>
           </Link>
 
-          {/* ANIMATED PROFILE VIDEO */}
           <Link
             to="/login"
             className="profile-link"
@@ -171,9 +170,12 @@ function Dashboard() {
               and prove your coding skills against the world.
             </p>
 
-            <button className="global-arena-button" disabled>
+            <Link
+              to="/global-arena"
+              className="global-arena-button"
+            >
               ENTER GLOBAL ARENA →
-            </button>
+            </Link>
           </div>
 
           <div className="arena-status">

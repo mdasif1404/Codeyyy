@@ -16,6 +16,7 @@ import ProfilePage from "./pages/ProfilePage";
 import RoomsPage from "./pages/RoomsPage";
 import GameStatsPage from "./pages/GameStatsPage";
 import Leaderboard from "./pages/Leaderboard";
+import GlobalArenaFlow from "./pages/GlobalArenaFlow";
 
 import { AuthProvider } from "./context/authContext";
 import ProtectedRoute from "./components/protectedRoute";
@@ -42,43 +43,40 @@ function App() {
           <Route path="/verify-email" element={<VerifyEmailPage />} />
 
           {/* Protected pages */}
-          <Route element={<ProtectedRoute />}/>
-            <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<ProtectedRoute />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/private-room" element={<PrivateRoom />} />
 
-            <Route path="/private-room" element={<PrivateRoom />} />
+          {/* Profile page */}
+          <Route path="/profile" element={<ProfilePage />} />
 
-        {/* Profile page */}
-        <Route path="/profile" element={<ProfilePage />} />
+          {/* Rooms page */}
+          <Route path="/Rooms" element={<RoomsPage />} />
 
-        {/* Rooms page */}
-        <Route path="/Rooms" element={<RoomsPage />} />
+          <Route
+            path="/private-room-dashboard/:roomId"
+            element={<PrivateRoomDashboard />}
+          />
 
-        {/* Permanent private room */}
-        <Route path="/private-room" element={<PrivateRoom />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
 
-            <Route
-              path="/private-room-dashboard/:roomId"
-              element={<PrivateRoomDashboard />}
-            />
+          <Route
+            path="/private-room-dashboard/:roomCode"
+            element={<PrivateRoomDashboard />}
+          />
 
-        <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/GameStats" element={<GameStatsPage />} />
 
-        <Route
-          path="/private-room-dashboard/:roomCode"
-          element={<PrivateRoomDashboard />}
-        />
+          {/* Temporary room */}
+          <Route path="/temporary-room" element={<TemporaryRoom />} />
 
-        <Route path="/GameStats" element={<GameStatsPage />} />
+          {/* Global Arena */}
+          <Route path="/global-arena" element={<GlobalArenaFlow />} />
 
-        {/* Temporary room */}
-        <Route path="/temporary-room" element={<TemporaryRoom />} />
-
-        {/* Coding Arena */}
-        <Route path="/arena" element={<CodingArena />} />
-
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
-      </Routes>
-    </>
+          {/* Coding Arena */}
+          <Route path="/arena" element={<CodingArena />} />
+        </Routes>
+      </>
     </AuthProvider>
   );
 }
