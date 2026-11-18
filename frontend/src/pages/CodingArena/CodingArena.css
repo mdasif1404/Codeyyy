@@ -876,3 +876,350 @@
     font-size: 42px;
   }
 }
+
+/* =========================================
+   CODYyy - CODING ARENA DESKTOP ALIGNMENT
+========================================= */
+
+/* Main page */
+.coding-arena {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: "DM Sans", sans-serif;
+}
+
+/* Keep background behind all content */
+.arena-main {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 90px);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.arena-background-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -2;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.arena-video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(12, 5, 8, 0.52);
+  pointer-events: none;
+}
+
+/* Main content container */
+.arena-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
+  min-height: inherit;
+  padding: 18px 0 40px;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   ROOM TITLE + TIMER
+========================================= */
+
+.arena-heading {
+  width: 100%;
+  padding: 12px 0 22px;
+  box-sizing: border-box;
+}
+
+.room-title-row {
+  width: calc(100% - 64px);
+  max-width: 1540px;
+  min-height: 145px;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  box-sizing: border-box;
+}
+
+.room-title-row .arena-room-name {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 5px 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+/* Focus timer */
+.arena-focus-timer {
+  position: relative;
+  flex: 0 0 295px;
+  width: 295px;
+  height: 145px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 190, 45, 0.45);
+  border-radius: 15px;
+  background: #16090b;
+  box-shadow: 0 0 15px rgba(255, 65, 35, 0.15);
+}
+
+.arena-timer-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.arena-timer-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 12px;
+  box-sizing: border-box;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 4, 7, 0.35),
+    rgba(12, 4, 7, 0.12),
+    rgba(12, 4, 7, 0.48)
+  );
+}
+
+/* =========================================
+   MAIN WORKSPACE
+   LEFT: PROBLEM
+   RIGHT: EDITOR
+========================================= */
+
+.arena-workspace {
+  display: grid;
+  grid-template-columns:
+    minmax(360px, 0.34fr)
+    minmax(0, 0.66fr);
+  gap: 24px;
+  align-items: start;
+
+  width: calc(100% - 64px);
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Problem device */
+.problem-panel {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 470px;
+  aspect-ratio: 468 / 680;
+  height: auto;
+  min-width: 0;
+  margin: 0 auto;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Preserve the device video proportions */
+.problem-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Problem screen */
+.problem-screen {
+  position: absolute;
+  top: 17.8%;
+  left: 7.5%;
+  width: 85%;
+  height: 56.5%;
+  padding: 15px 13px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 2;
+}
+
+/* Editor gets all available right-side space */
+.editor-panel {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.editor-panel > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   BOTTOM WIDGETS
+   USB LEFT / PLAYER ACTIVITY RIGHT
+========================================= */
+
+.arena-bottom-widgets {
+  display: grid;
+  grid-template-columns:
+    minmax(360px, 0.34fr)
+    minmax(0, 0.66fr);
+  gap: 24px;
+  align-items: start;
+
+  width: calc(100% - 64px);
+  max-width: 1540px;
+  margin: 18px auto 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.arena-usb-area,
+.arena-player-area {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.arena-usb-area {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.arena-player-area {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Prevent child widgets from forcing overflow */
+.arena-usb-area > *,
+.arena-player-area > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* =========================================
+   LAPTOP / SMALL DESKTOP
+========================================= */
+
+@media (max-width: 1000px) {
+  .arena-workspace,
+  .arena-bottom-widgets {
+    grid-template-columns: minmax(0, 1fr);
+    width: calc(100% - 40px);
+    gap: 24px;
+  }
+
+  .problem-panel {
+    width: min(100%, 470px);
+  }
+
+  .editor-panel {
+    width: 100%;
+  }
+
+  .arena-usb-area,
+  .arena-player-area {
+    justify-content: center;
+  }
+
+  .room-title-row {
+    width: calc(100% - 40px);
+  }
+}
+
+/* =========================================
+   TABLET / MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+  .arena-content {
+    padding-top: 12px;
+  }
+
+  .arena-heading {
+    padding-bottom: 16px;
+  }
+
+  .room-title-row {
+    width: calc(100% - 28px);
+    min-height: auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .room-title-row .arena-room-name {
+    width: 100%;
+    text-align: center;
+    font-size: clamp(25px, 8vw, 36px);
+    letter-spacing: 2px;
+  }
+
+  .arena-focus-timer {
+    flex: none;
+    width: min(100%, 295px);
+    height: 135px;
+  }
+
+  .arena-workspace,
+  .arena-bottom-widgets {
+    width: calc(100% - 24px);
+    gap: 18px;
+  }
+
+  .arena-workspace {
+    padding: 0;
+  }
+
+  .arena-bottom-widgets {
+    margin-top: 18px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 420px) {
+  .arena-workspace,
+  .arena-bottom-widgets {
+    width: calc(100% - 16px);
+  }
+
+  .problem-screen {
+    padding: 9px;
+  }
+
+  .arena-timer-time {
+    font-size: 40px;
+  }
+}
