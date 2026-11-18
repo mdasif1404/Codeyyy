@@ -65,7 +65,6 @@
   align-items: center;
   gap: 25px;
 
-  /* Background is handled by pseudo-elements */
   background: transparent;
 
   border-bottom: 1px solid rgba(255, 230, 195, 0.25);
@@ -152,13 +151,9 @@
   justify-content: center;
 
   overflow: hidden;
-  
-  /* Creates smooth rounded capsule/curved edges */
-  border-radius: 40px / 24px; 
-
+  border-radius: 40px / 24px;
   mix-blend-mode: screen;
-  
-  /* Softens the inner boundaries so it melts into the background */
+
   -webkit-mask-image: radial-gradient(ellipse at center, black 50%, transparent 90%);
   mask-image: radial-gradient(ellipse at center, black 50%, transparent 90%);
 }
@@ -477,6 +472,9 @@
 }
 
 .global-arena-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 14px 24px;
 
   border: 1px solid #ffc400;
@@ -487,9 +485,16 @@
   font-size: 21px;
   font-weight: 900;
   letter-spacing: 1px;
+  text-decoration: none;
 
-  cursor: not-allowed;
-  opacity: 0.85;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.global-arena-button:hover {
+  background: #ff3548;
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(237, 37, 47, 0.45);
 }
 
 .arena-status {

@@ -17,6 +17,7 @@ import ProfilePage from "./pages/ProfilePage";
 import RoomsPage from "./pages/RoomsPage";
 import GameStatsPage from "./pages/GameStatsPage";
 import Leaderboard from "./pages/Leaderboard";
+import GlobalArenaFlow from "./pages/GlobalArenaFlow";
 
 import { AuthProvider } from "./context/authContext";
 import ProtectedRoute from "./components/protectedRoute";
@@ -53,6 +54,9 @@ function App() {
 
             {/* Temporary rooms */}
             <Route path="/temporary-room" element={<TemporaryRoom />} />
+
+            {/* Global Arena */}
+            <Route path="/global-arena" element={<GlobalArenaFlow />} />
 
             {/* Other protected pages */}
             <Route path="/profile" element={<ProfilePage />} />
