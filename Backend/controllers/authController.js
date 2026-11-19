@@ -563,28 +563,26 @@ export const updateProfile = async (req, res) => {
     }
 
     if (avatar !== undefined) {
-      if (typeof avatar !== "string" || avatar.length > 2048) {
+      const allowedAvatars = [
+        "/assets/avatar-cat.jpg",
+        "/assets/avatar-dog.jpg",
+        "/assets/avatar-doge.jpg",
+        "/assets/avatar-duck.jpg",
+        "/assets/avatar-frog.jpg",
+        "/assets/avatar-hacker.jpg",
+        "/assets/avatar-spiderman.jpg"
+      ];
+    
+      if (
+        typeof avatar !== "string" ||
+        (avatar !== "" && !allowedAvatars.includes(avatar))
+      ) {
         return res.status(400).json({
           success: false,
-          message: "Invalid avatar value"
+          message: "Invalid avatar selection"
         });
       }
-
-      if (avatar !== "") {
-        try {
-          const avatarUrl = new URL(avatar);
-
-          if (avatarUrl.protocol !== "https:") {
-            throw new Error("Invalid avatar protocol");
-          }
-        } catch {
-          return res.status(400).json({
-            success: false,
-            message: "Avatar must be a valid HTTPS URL"
-          });
-        }
-      }
-
+    
       updates.avatar = avatar;
     }
 

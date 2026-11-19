@@ -1386,3 +1386,64 @@ export const getTemporaryRoomMatchDetails = async (req, res) => {
     });
   }
 };
+
+
+// Get all rooms associated with the logged-in user
+export const getMyRooms = async (req, res) => {
+  try {
+    const memberships = await RoomMember.find({
+      user: req.user.id
+    })
+      .populate({
+        path: "room",
+        select: "roomCode roomName roomType owner maxPlayers roomStatus matchStatus difficulty totalMatches createdAt"
+      })
+      .sort({ joinedAt: -1 })
+      .lean();
+
+    const rooms = memberships
+      .filter((membership) => membership.room)
+      .map((membership) => ({
+        membershipId: membership._id,
+        role: membership.role,
+        membershipStatus: membership.status,
+        joinedAt: membership.joinedAt,
+        room: membership.room
+      }));
+
+    const permanentRooms = rooms.filter(
+      (item) => item.room.roomType === "permanent"
+    );
+
+    const temporaryRooms = rooms.filter(
+      (item) => item.room.roomType === "temporary"
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        permanentRooms,
+        temporaryRooms,
+        summary: {
+          totalRooms: rooms.length,
+          permanentRooms: permanentRooms.length,
+          temporaryRooms: temporaryRooms.length,
+          activeMemberships: rooms.filter(
+            (item) => item.membershipStatus === "active"
+          ).length,
+          leftMemberships: rooms.filter(
+            (item) => item.membershipStatus === "left"
+          ).length
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error("Get my rooms error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to retrieve your rooms"
+    });
+  }
+};

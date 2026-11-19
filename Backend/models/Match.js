@@ -5,7 +5,10 @@ const matchSchema = new mongoose.Schema({
   room: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Room",
-    required: true
+    default: null,
+    required: function () {
+      return this.matchType !== "global-arena";
+    }
   },
 
   challenge: {
@@ -63,6 +66,12 @@ const matchSchema = new mongoose.Schema({
     executionTime: Number
   }],
 
+  matchType: {
+    type: String,
+    enum: ["permanent-room", "global-arena", "temporary-room"],
+    required: true
+  },
+
   winner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -99,5 +108,6 @@ const matchSchema = new mongoose.Schema({
 matchSchema.index({ room: 1, completedAt: -1 });
 matchSchema.index({ "participants.user": 1, completedAt: -1 });
 matchSchema.index({ status: 1, endsAt: 1 });
+matchSchema.index({ matchType: 1, completedAt: -1 });
 
 export default mongoose.model("Match", matchSchema);

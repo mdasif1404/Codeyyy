@@ -1,12 +1,13 @@
 import api from "../services/api.js";
 import socket from "../services/socket.js";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/TemporaryRoom.css";
 
 function TemporaryRoom() {
   const [players, setPlayers] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -61,7 +62,9 @@ function TemporaryRoom() {
         return;
       }
     
-      navigate(`/arena?matchId=${matchId}&roomId=${roomId}&roomType=temporary`);
+      navigate(
+        `/arena?matchId=${data.matchId}&roomId=${data.roomId || roomId}&roomType=temporary`
+      );
     };
 
     socket.on("room:matchStarted", handleMatchStarted);
@@ -89,17 +92,28 @@ function TemporaryRoom() {
     };
   }, [navigate]);
 
-  // Restore an existing temporary room after page reload
+  // Restore a selected temporary room or the user's existing room
   useEffect(() => {
     const restoreTemporaryRoom = async () => {
       try {
-        const response = await api.get("/rooms/temporary/my-room");
+        let response;
+      
+        // If opened from Profile, load that particular room
+        if (location.state?.roomId) {
+          response = await api.get(
+            `/rooms/temporary/${location.state.roomId}`
+          );
+        } else {
+          // Otherwise restore the user's existing temporary room
+          response = await api.get("/rooms/temporary/my-room");
+        }
+      
         const roomData = response.data.data;
-
+      
         setRoomId(roomData.roomId);
         setRoomCode(roomData.roomCode);
         setRoomDetails(roomData);
-
+      
         setPlayers(
           (roomData.members || []).map((member) => ({
             id: member.userId,
@@ -109,33 +123,62 @@ function TemporaryRoom() {
             host: member.role === "owner",
           }))
         );
-
+      
         setShowRoomDialog(false);
-
-        // Reconnect to the room's Socket.IO channel
+      
+        // Join the room's Socket.IO channel
+        const joinSocketRoom = () => {
+          socket.emit(
+            "room:join",
+            { roomId: roomData.roomId },
+            (socketResponse) => {
+              if (socketResponse?.success && socketResponse.members) {
+                setPlayers(
+                  socketResponse.members.map((member) => ({
+                    id: member.userId,
+                    name: member.username,
+                    role: member.role === "owner" ? "Host" : "Opponent",
+                    status: "READY",
+                    host: member.role === "owner",
+                  }))
+                );
+              } else {
+                console.error(
+                  "Socket room join failed:",
+                  socketResponse?.message
+                );
+              }
+            }
+          );
+        };
+      
         if (socket.connected) {
-          socket.emit("room:join", { roomId: roomData.roomId });
+          joinSocketRoom();
         } else {
           socket.connect();
-
-          socket.once("connect", () => {
-            socket.emit("room:join", { roomId: roomData.roomId });
-          });
+          socket.once("connect", joinSocketRoom);
         }
-
+      
       } catch (error) {
+        console.error("Temporary room restoration failed:", error);
+      
         if (error.response?.status === 404) {
           setShowRoomDialog(true);
-        } else {
-          console.error("Temporary room restoration failed:", error);
+        } else if (error.response?.status === 403) {
+          setRoomError("You are not a member of this room.");
           setShowRoomDialog(true);
-          setRoomError("Unable to restore your room. Please try again.");
+        } else {
+          setRoomError(
+            error.response?.data?.message ||
+            "Unable to restore your room. Please try again."
+          );
+          setShowRoomDialog(true);
         }
       }
     };
-
+  
     restoreTemporaryRoom();
-  }, []);
+  }, [location.state?.roomId]);
 
   const handleCopy = async () => {
     try {

@@ -960,7 +960,7 @@
     padding: 22px;
   }
 
-  .match-results-summary {
+  .results-summary {
     grid-template-columns: 1fr;
   }
 

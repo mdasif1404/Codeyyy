@@ -145,10 +145,16 @@ export const createRoomMatch = async (roomId) => {
 
       const endsAt = new Date(startedAt.getTime() + duration);
 
+      const matchType =
+        room.roomType === "permanent"
+          ? "permanent-room"
+          : "temporary-room";
+          
       const [match] = await Match.create(
         [{
           room: room._id,
           challenge: selectedChallenge._id,
+          matchType,
           participants,
           status: "running",
           startedAt,

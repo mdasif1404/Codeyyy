@@ -13,18 +13,21 @@ function GlobalArenaFlow() {
     setShowLobby(true);
   };
 
+  const handleBack = () => {
+    setShowLobby(false);
+  };
+
   if (showLobby) {
     return (
       <GlobalArenaLobby
         difficulty={selectedDifficulty}
+        onBack={handleBack}
       />
     );
   }
 
   return (
-    <GlobalArena
-      onStartBattle={handleStartBattle}
-    />
+    <GlobalArena onStartBattle={handleStartBattle} />
   );
 }
 

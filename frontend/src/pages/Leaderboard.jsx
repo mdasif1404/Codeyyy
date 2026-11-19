@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Trophy,
@@ -8,114 +9,137 @@ import {
   ChevronDown,
   ArrowRight
 } from "lucide-react";
+
+import api from "../services/api.js";
 import "../styles/Leaderboard.css";
 
 function Leaderboard() {
   const [activeTab, setActiveTab] = useState("weekly");
   const [period, setPeriod] = useState("This Week");
 
-  const weeklyPlayers = [
-    {
-      name: "CodeMaster77",
-      wins: 12,
-      score: 1250,
-      avatar: "/assets/avatar-hacker.jpg"
-    },
-    {
-      name: "DevLegend",
-      wins: 10,
-      score: 1120,
-      avatar: "/assets/avatar-doge.jpg"
-    },
-    {
-      name: "HackPro",
-      wins: 9,
-      score: 1080,
-      avatar: "/assets/avatar-spiderman.jpg"
-    },
-    {
-      name: "CoderRiya",
-      wins: 8,
-      score: 980,
-      avatar: "/assets/avatar-cat.jpg"
-    },
-    {
-      name: "ByteWarrior",
-      wins: 7,
-      score: 920,
-      avatar: "/assets/avatar-frog.jpg"
-    }
-  ];
+  const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const globalPlayers = [
-    {
-      name: "LegendCoder",
-      wins: 245,
-      score: 9820,
-      avatar: "/assets/avatar-hacker.jpg"
-    },
-    {
-      name: "ProDev",
-      wins: 232,
-      score: 9450,
-      avatar: "/assets/avatar-doge.jpg"
-    },
-    {
-      name: "TechNinja",
-      wins: 221,
-      score: 9100,
-      avatar: "/assets/avatar-spiderman.jpg"
-    },
-    {
-      name: "ArenaChampion",
-      wins: 210,
-      score: 8700,
-      avatar: "/assets/avatar-duck.jpg"
-    },
-    {
-      name: "CodeBeast",
-      wins: 198,
-      score: 8400,
-      avatar: "/assets/avatar-dog.jpg"
-    }
-  ];
+  // FETCH LEADERBOARD
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-  const players = activeTab === "weekly" ? weeklyPlayers : globalPlayers;
+        let response;
 
+        if (activeTab === "global") {
+          response = await api.get("/leaderboard/global");
+        } else {
+          const periodMap = {
+            "This Week": "this-week",
+            "Last Week": "last-week",
+            "This Month": "this-month"
+          };
+
+          const selectedPeriod = periodMap[period];
+
+          response = await api.get(
+            `/leaderboard/weekly?period=${selectedPeriod}`
+          );
+        }
+
+        setPlayers(
+          response.data.data?.leaderboard || []
+        );
+
+      } catch (err) {
+        console.error("Leaderboard fetch error:", err);
+
+        setError(
+          err.response?.data?.message ||
+          "Unable to load leaderboard."
+        );
+
+        setPlayers([]);
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
+  }, [activeTab, period]);
+
+  // PLAYER ROWS
   const renderPlayers = () => (
     <>
-      <div className="leaderboard-table">
-        <div className="leaderboard-row table-heading">
-          <span>#</span>
-          <span>Player</span>
-          <span>Wins</span>
-          <span>Score</span>
+      {loading ? (
+        <div className="leaderboard-empty">
+          <p>Loading leaderboard...</p>
         </div>
-
-        {players.map((player, index) => (
-          <div className="leaderboard-row" key={player.name}>
-            <div className={`rank rank-${index + 1}`}>
-              {index < 3 ? <Trophy size={29} /> : index + 1}
-            </div>
-
-            <div className="player-info">
-              <div className="player-avatar">
-                <img src={player.avatar} alt={`${player.name} avatar`} />
-              </div>
-              <span>{player.name}</span>
-            </div>
-
-            <div className="wins">
-              <Trophy size={19} />
-              <span>{player.wins}</span>
-            </div>
-
-            <div className="score">{player.score}</div>
+      ) : error ? (
+        <div className="leaderboard-empty">
+          <p>{error}</p>
+          <button
+            onClick={() => {
+              setActiveTab(current => current);
+            }}
+          >
+            Please try again
+          </button>
+        </div>
+      ) : players.length === 0 ? (
+        <div className="leaderboard-empty">
+          <p>No completed matches found for this period.</p>
+        </div>
+      ) : (
+        <div className="leaderboard-table">
+          <div className="leaderboard-row table-heading">
+            <span>#</span>
+            <span>Player</span>
+            <span>Wins</span>
+            <span>Score</span>
           </div>
-        ))}
-      </div>
 
-      <button className="view-top-button">
+          {players.map((player) => (
+            <div
+              className="leaderboard-row"
+              key={player.userId}
+            >
+              <div className={`rank rank-${player.rank}`}>
+                {player.rank <= 3 ? (
+                  <Trophy size={29} />
+                ) : (
+                  player.rank
+                )}
+              </div>
+
+              <div className="player-info">
+                <div className="player-avatar">
+                  <img
+                    src={
+                      player.avatar ||
+                      "/assets/avatar-hacker.jpg"
+                    }
+                    alt={`${player.username} avatar`}
+                  />
+                </div>
+
+                <span>{player.username}</span>
+              </div>
+
+              <div className="wins">
+                <Trophy size={19} />
+                <span>{player.wins}</span>
+              </div>
+
+              <div className="score">
+                {player.totalPoints}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <button className="view-top-button" type="button">
         View {activeTab === "weekly" ? "Weekly" : "Global"} Top 100
         <ArrowRight size={18} />
       </button>
@@ -124,6 +148,7 @@ function Leaderboard() {
 
   return (
     <div className="leaderboard-page">
+
       {/* LEADERBOARD BACKGROUND VIDEO */}
       <video
         className="leaderboard-background-video"
@@ -133,7 +158,10 @@ function Leaderboard() {
         playsInline
         preload="auto"
       >
-        <source src="/videos/leaderboard.mp4" type="video/mp4" />
+        <source
+          src="/videos/leaderboard.mp4"
+          type="video/mp4"
+        />
       </video>
 
       {/* DARK OVERLAY */}
@@ -142,6 +170,7 @@ function Leaderboard() {
       {/* TOP NAVBAR */}
       <header className="leaderboard-header">
         <div className="leaderboard-header-content">
+
           <Link to="/dashboard" className="leaderboard-logo">
             <img
               src="/assets/codeyyy-logo.jpg"
@@ -151,7 +180,7 @@ function Leaderboard() {
 
           <nav className="leaderboard-nav">
             <Link
-              to="/login"
+              to="/profile"
               className="leaderboard-profile-link"
               title="My Profile"
               aria-label="My Profile"
@@ -163,15 +192,20 @@ function Leaderboard() {
                 playsInline
                 preload="auto"
               >
-                <source src="/videos/profile-eye.mp4" type="video/mp4" />
+                <source
+                  src="/videos/profile-eye.mp4"
+                  type="video/mp4"
+                />
               </video>
             </Link>
           </nav>
+
         </div>
       </header>
 
-      {/* PAGE CONTENT CONTAINER */}
+      {/* PAGE CONTENT */}
       <div className="leaderboard-content-wrapper">
+
         {/* HERO SECTION */}
         <div className="leaderboard-hero">
           <div className="hero-crown">
@@ -180,14 +214,19 @@ function Leaderboard() {
               alt="Leaderboard Champion Crown"
             />
           </div>
+
           <h1>
             LEADER<span>BOARD</span>
           </h1>
-          <p>See how you rank among players — this week and across the world!</p>
+
+          <p>
+            See how you rank among players — this week and across the world!
+          </p>
         </div>
 
         {/* LEADERBOARD TABS */}
         <div className="leaderboard-tabs">
+
           <button
             className={activeTab === "weekly" ? "active" : ""}
             onClick={() => setActiveTab("weekly")}
@@ -203,17 +242,21 @@ function Leaderboard() {
             <Globe2 size={22} />
             Global Leaderboard
           </button>
+
         </div>
 
         {/* LEADERBOARD CARD */}
         <div className="leaderboard-card">
+
           <div className="leaderboard-card-header">
+
             <div className="leaderboard-title">
               {activeTab === "weekly" ? (
                 <CalendarDays size={43} />
               ) : (
                 <Globe2 size={43} />
               )}
+
               <div>
                 <h2>
                   {activeTab === "weekly" ? (
@@ -222,6 +265,7 @@ function Leaderboard() {
                     <>GLOBAL <span>LEADERBOARD</span></>
                   )}
                 </h2>
+
                 <p>
                   {activeTab === "weekly"
                     ? "Top players this week"
@@ -233,6 +277,7 @@ function Leaderboard() {
             {activeTab === "weekly" && (
               <div className="period-select">
                 <Clock3 size={19} />
+
                 <select
                   value={period}
                   onChange={(e) => setPeriod(e.target.value)}
@@ -241,12 +286,15 @@ function Leaderboard() {
                   <option>Last Week</option>
                   <option>This Month</option>
                 </select>
+
                 <ChevronDown size={16} />
               </div>
             )}
+
           </div>
 
           {renderPlayers()}
+
         </div>
 
         {/* FOOTER */}
@@ -255,6 +303,7 @@ function Leaderboard() {
           Code <b>•</b> Compete <b>•</b> Climb Higher
           <span></span>
         </div>
+
       </div>
     </div>
   );

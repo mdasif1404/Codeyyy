@@ -16,7 +16,8 @@ import {
   getMyTemporaryRoom,
   leaveTemporaryRoom,
   getTemporaryRoomMatchDetails,
-  getPermanentRoomMatchDetails
+  getPermanentRoomMatchDetails,
+  getMyRooms
 } from "../controllers/roomController.js";
 
 const router = express.Router();
@@ -32,7 +33,7 @@ router.get("/temporary/:roomId/matches/:matchId", authMiddleware, getTemporaryRo
 
 // Create a permanent room
 router.post("/", authMiddleware, createRoom);
-
+router.get("/my-rooms", authMiddleware, getMyRooms);
 // Join a room using room code
 router.post("/join", authMiddleware, joinRoom);
 router.post("/:roomId/leave", authMiddleware, leaveRoom);

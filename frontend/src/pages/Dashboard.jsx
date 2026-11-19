@@ -65,10 +65,10 @@ function Dashboard() {
           </Link>
 
           <Link
-            to="/login"
+            to="/profile"
             className="profile-link"
-            title="Profile / Log in"
-            aria-label="Profile or log in"
+            title="My Profile"
+            aria-label="My Profile"
           >
             <video
               className="profile-video"

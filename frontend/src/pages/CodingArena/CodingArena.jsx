@@ -101,38 +101,48 @@ const CodingArena = ({
     fetchMatchDetails();
   }, [matchId, roomId, roomType]);
 
-  // Listen for match completion
-  // Join Socket.IO room and listen for match completion
+  // Join the Socket.IO room and listen for match completion
   useEffect(() => {
-    if (!roomId || roomType !== "permanent") return;
-  
+    if (!roomId || !matchId) return;
+
     const joinSocketRoom = () => {
-      socket.emit("room:join", { roomId });
+      socket.emit("room:join", { roomId }, (response) => {
+        if (response?.success) {
+          console.log("Joined match Socket.IO room:", roomId);
+        } else {
+          console.error(
+            "Unable to join match Socket.IO room:",
+            response?.message
+          );
+        }
+      });
     };
-  
+
     const handleMatchCompleted = (results) => {
       if (String(results.matchId) !== String(matchId)) return;
-    
+
+      console.log("MATCH COMPLETED:", results);
+
       setMatchResults(results);
       setMatchCompleted(true);
     };
-  
+
     socket.on("connect", joinSocketRoom);
     socket.on("match:completed", handleMatchCompleted);
-  
-    // Connect if the socket is not already connected.
-    if (!socket.connected) {
-      socket.connect();
-    } else {
+
+    if (socket.connected) {
       joinSocketRoom();
+    } else {
+      socket.connect();
     }
-  
+
     return () => {
       socket.off("connect", joinSocketRoom);
       socket.off("match:completed", handleMatchCompleted);
+
       socket.emit("room:leave", { roomId });
     };
-  }, [roomId, roomType, matchId]);
+  }, [roomId, matchId]);
 
   // Backend-synchronized match countdown
   useEffect(() => {
@@ -182,6 +192,33 @@ const CodingArena = ({
   );
 
   const isWinner = currentPlayer?.isWinner === true;
+
+  const getPlayerName = (player) => {
+    if (player.username) return player.username;
+
+    const playerId = String(
+      player.user?._id || player.user || ""
+    );
+
+    const matchParticipant = matchData?.match?.participants?.find(
+      (participant) => {
+        const participantId = String(
+          participant.user?._id ||
+          participant.user ||
+          participant._id ||
+          ""
+        );
+
+        return participantId === playerId;
+      }
+    );
+
+    return (
+      matchParticipant?.username ||
+      matchParticipant?.user?.username ||
+      "Player"
+    );
+  };
 
   const handleCopyRoomCode = async () => {
     try {
@@ -258,7 +295,7 @@ const CodingArena = ({
                   <tr key={player.user?._id || player.user || index}>
                     <td>#{player.rank || index + 1}</td>
                     <td>
-                      {player.username || "Player"}
+                      {getPlayerName(player)}
                       {String(player.user?._id || player.user) === currentUserId
                         ? " (YOU)"
                         : ""}

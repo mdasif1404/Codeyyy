@@ -9,6 +9,9 @@ import corsMiddleware from './Config/cors.js';
 import authRoutes from './routes/authRoutes.js'
 import roomRoutes from "./routes/roomRoutes.js";
 import codeRoutes from "./routes/codeRoutes.js";
+import statsRoutes from "./routes/statsRoutes.js";
+import leaderboardRoutes from "./routes/leaderboardRoutes.js";
+import registerArenaSocket from "./Socket/arena.socket.js";
 import socketAuth from "./Socket/socketAuth.js";
 import { cleanupExpiredTemporaryRooms } from "./services/temporaryRoomCleanup.service.js";
 import { completeExpiredMatches } from "./services/matchTimer.service.js";
@@ -40,6 +43,8 @@ app.use(cookieParser())
 app.use('/api/auth', authRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/code", codeRoutes);
+app.use("/api/stats", statsRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
 
 app.get('/', (req, res)=>{
     res.status(200).json({
@@ -113,6 +118,10 @@ io.on("connection", (socket) => {
       io.to(socketRoom).emit("room:members", {
         roomId,
         members: memberList
+      });
+
+      io.on("connection", (socket) => {
+        registerArenaSocket(io, socket);
       });
 
       return callback?.({

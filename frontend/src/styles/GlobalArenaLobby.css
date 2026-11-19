@@ -203,6 +203,13 @@
   letter-spacing: 1px;
 }
 
+.lobby-profile-name {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
 /* =========================================
    THREE COLUMN LAYOUT
 ========================================= */
